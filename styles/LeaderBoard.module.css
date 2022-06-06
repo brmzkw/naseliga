@@ -1,0 +1,17 @@
+.container table {
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%;
+}
+
+.container th, .container td {
+  padding: 20px;
+}
+
+.container td:first-letter {
+  text-transform: capitalize;
+}
+
+.container tr:nth-child(even) {
+  background-color: rgba(0, 128, 0, 0.05);
+}
