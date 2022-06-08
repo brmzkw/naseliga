@@ -1,13 +1,22 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import SCORES from '../scores.json';
 
-import {
-  LeaderBoardAPIResponse,
-  LeaderBoardMatch,
-  LeaderBoardEntry,
-} from '../../types/api';
 
-import SCORES from '../../scores.json';
+export type LeaderBoardMatch = {
+  player_a: string
+  player_b: string
+  score_a: number
+  score_b: number
+}
 
+export type LeaderBoardEvent = {
+  date: string
+  matches: LeaderBoardMatch[]
+}
+
+export type LeaderBoardEntry = {
+  player: string
+  score: number
+}
 
 function computeNewScores(
   score_a: number,
@@ -57,21 +66,14 @@ function computeScores(matches: LeaderBoardMatch[]): LeaderBoardEntry[] {
   return sorted.map(([player, score]) => ({player, score}));
 }
 
-async function leaderBoard(): Promise<LeaderBoardAPIResponse> {
-  const leaderboard = computeScores(
-    SCORES.map((event) => event.matches).flat()
-  );
+export default class Naseliga {
+  public events
+  public leaderboard
 
-  return {
-    events: SCORES,
-    leaderboard,
+  constructor() {
+    this.events = SCORES;
+    this.leaderboard = computeScores(
+      SCORES.map((event) => event.matches).flat()
+    );
   }
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<LeaderBoardAPIResponse>
-) {
-  const data = await leaderBoard();
-  res.status(200).json(data);
 }

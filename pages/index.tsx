@@ -1,15 +1,21 @@
 import React from 'react';
 
-import type { NextPage } from 'next';
+import { GetStaticProps } from 'next'
 import Head from 'next/head';
 import Image from 'next/image';
+import type { NextPage } from 'next';
 
 import styles from '../styles/Home.module.css';
 
-import LeaderBoard from '../components/LeaderBoard';
+import LeaderBoardTable from '../components/LeaderBoardTable';
+import Naseliga, { LeaderBoardEntry } from '../lib/naseliga';
 
 
-const Home: NextPage = () => {
+type PropsType = {
+    leaderboard: LeaderBoardEntry[]
+}
+
+export default function Home({ leaderboard }: PropsType)  {
   return (
     <div className={styles.container}>
       <Head>
@@ -19,7 +25,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <LeaderBoard />
+        <LeaderBoardTable leaderboard={leaderboard} />
       </main>
 
       <footer className={styles.footer}>
@@ -28,4 +34,13 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export const getStaticProps: GetStaticProps = async (context) => {
+  const naseliga = new Naseliga();
+
+  return {
+    props: {
+      leaderboard: naseliga.leaderboard,
+      events: naseliga.events,
+    },
+  }
+}
