@@ -1,16 +1,16 @@
 import SCORES from '../scores.json';
 
 
-export type LeaderBoardMatch = {
+export type Match = {
   player_a: string
   player_b: string
   score_a: number
   score_b: number
 }
 
-export type LeaderBoardEvent = {
+export type Event = {
   date: string
-  matches: LeaderBoardMatch[]
+  matches: Match[]
 }
 
 export type LeaderBoardEntry = {
@@ -39,7 +39,7 @@ function computeNewScores(
   return [new_a, new_b];
 }
 
-function computeScores(matches: LeaderBoardMatch[]): LeaderBoardEntry[] {
+function computeScores(matches: Match[]): LeaderBoardEntry[] {
   const scores: {[player: string]: number} = {};
 
   matches.forEach((match) => {
@@ -67,8 +67,8 @@ function computeScores(matches: LeaderBoardMatch[]): LeaderBoardEntry[] {
 }
 
 export default class Naseliga {
-  public events
-  public leaderboard
+  public events: Event[]
+  public leaderboard: LeaderBoardEntry[]
 
   constructor() {
     this.events = SCORES;

@@ -7,15 +7,17 @@ import type { NextPage } from 'next';
 
 import styles from '../styles/Home.module.css';
 
+import EventsTable from '../components/EventsTable';
 import LeaderBoardTable from '../components/LeaderBoardTable';
-import Naseliga, { LeaderBoardEntry } from '../lib/naseliga';
+import Naseliga, { Event, LeaderBoardEntry } from '../lib/naseliga';
 
 
 type PropsType = {
     leaderboard: LeaderBoardEntry[]
+    events: Event[],
 }
 
-export default function Home({ leaderboard }: PropsType)  {
+export default function Home({ leaderboard, events }: PropsType)  {
   return (
     <div className={styles.container}>
       <Head>
@@ -26,6 +28,7 @@ export default function Home({ leaderboard }: PropsType)  {
 
       <main>
         <LeaderBoardTable leaderboard={leaderboard} />
+        <EventsTable events={events} />
       </main>
 
       <footer className={styles.footer}>

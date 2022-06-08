@@ -8,6 +8,7 @@ type PropsType = {
 export default function LeaderBoardTable({ leaderboard }: PropsType) {
   return (
     <div className={styles.container}>
+      <h2>Leaderboard</h2>
       <table>
         <thead>
           <tr>
