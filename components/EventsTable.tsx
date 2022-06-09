@@ -10,9 +10,16 @@ type MatchComponentPropsType = {
 
 function MatchComponent({ match }: MatchComponentPropsType) {
   return (
-    <>
-      <span className={styles.playerName}>{match.player_a}</span> / <span className={styles.playerName}>{match.player_b}</span>: {match.score_a} / {match.score_b}
-    </>
+    <div className={styles.match}>
+      <div className={styles.players}>
+        <div className={match.score_a > match.score_b ? styles.winner : styles.loser}>{match.player_a}</div>
+        <div className={match.score_b > match.score_a ? styles.winner : styles.loser}>{match.player_b}</div>
+      </div>
+      <div className={styles.scores}>
+        <div>{match.score_a}</div>
+        <div>{match.score_b}</div>
+      </div>
+    </div>
   );
 }
 
@@ -22,7 +29,7 @@ type MatchesComponentPropsType = {
 
 function MatchesComponent({ matches }: MatchesComponentPropsType) {
   return (
-    <ul>
+    <ul className={styles.matches}>
       {
         matches.map((match, idx) => (
           <li key={idx}>
