@@ -1,7 +1,12 @@
 .container table {
   border-collapse: collapse;
-  text-align: center;
+  text-align: left;
   width: 100%;
+}
+
+.container tr > *:first-child {
+  width: 1%;
+  text-align: right;
 }
 
 .container thead {

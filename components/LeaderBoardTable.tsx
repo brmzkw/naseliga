@@ -12,13 +12,20 @@ export default function LeaderBoardTable({ leaderboard }: PropsType) {
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Player</th>
             <th>Score</th>
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((entry) =>
+          {leaderboard.map((entry, idx) =>
             <tr key={entry.player}>
+              <td>
+                {idx == 0 ? "🥇" :
+                 idx == 1 ? "🥈" :
+                 idx == 2 ? "🥉" :
+                 `#${idx + 1}`}
+              </td>
               <td>{entry.player}</td>
               <td>{entry.score}</td>
             </tr>
