@@ -44,10 +44,9 @@ function EventComponent({ date, children }: EventComponentPropsType) {
 
   return (
     <>
+      {!clicked && (<span>&rarr;</span>)}
+      {clicked && (<span>&darr;</span>)}
       <button className={styles.button} onClick={onClick}>
-        {!clicked && (<span>&rarr;</span>)}
-        {clicked && (<span>&darr;</span>)}
-        &nbsp;
         {date}
       </button>
 
