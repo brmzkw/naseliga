@@ -6,21 +6,6 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-@media (min-width: 1px) {
-  body:after {
-    content: "";
-    background-image: url('/background.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-  }
-}
-
 a {
   color: inherit;
   text-decoration: none;
