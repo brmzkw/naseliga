@@ -1,26 +1,61 @@
-.container table {
+.topPlayers {
+  display: flex;
+  justify-content: space-around;
+}
+
+.topPlayers > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.topPlayers > div.first:before {
+  content: "👑";
+  display: block;
+  font-size: 3rem;
+}
+
+.topPlayers > div.second:before {
+  content: "🥈";
+  font-size: 2rem;
+}
+
+.topPlayers > div.third:before {
+  content: "🥉";
+  font-size: 1.5rem;
+}
+
+.topPlayers .name {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.scoresTable table {
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
   width: 100%;
 }
 
-.container tr > *:first-child {
-  width: 1%;
-  text-align: right;
-}
-
-.container thead {
+.scoresTable thead {
   border-bottom: 1px solid #ccc;
 }
 
-.container th, .container td {
+.scoresTable th {
+  display: none;
+}
+
+.scoresTable th, .scoresTable td {
   padding: 20px;
 }
 
-.container td:first-letter {
+.scoresTable td:first-letter {
   text-transform: capitalize;
 }
 
-.container tr:nth-child(even) {
+.scoresTable tr:nth-child(even) {
   background-color: rgba(0, 128, 0, 0.1);
 }
+

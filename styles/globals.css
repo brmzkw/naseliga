@@ -2,8 +2,13 @@ html,
 body {
   padding: 0;
   margin: 0;
+  background-color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  --primary-color: #5CA35E;
+  --secondary-color: #5E5CA3;
+  --tertiary-color: #A35E5C;
 }
 
 a {
