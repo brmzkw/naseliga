@@ -18,9 +18,25 @@
   font-size: 3rem;
 }
 
+.topPlayers > div.first {
+  order: 2;
+  font-size: 2rem;
+}
+
+.topPlayers > div.second {
+  order: 1;
+  font-size: 1.3rem;
+  align-self: flex-end;
+}
+
+.topPlayers > div.third {
+  order: 3;
+  align-self: flex-end;
+}
+
 .topPlayers > div.second:before {
   content: "🥈";
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 .topPlayers > div.third:before {
