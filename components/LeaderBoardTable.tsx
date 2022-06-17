@@ -38,13 +38,15 @@ function ScoresTable({ scores } : ScoresTablePropsType) {
       <table>
         <thead>
           <tr>
+            <th>Rank</th>
             <th>Player</th>
             <th>Score</th>
           </tr>
         </thead>
         <tbody>
-          {scores.map((entry) =>
+          {scores.map((entry, idx) =>
             <tr key={entry.player}>
+              <td>#{idx + 4}</td>
               <td>{entry.player}</td>
               <td>{entry.score}</td>
             </tr>
