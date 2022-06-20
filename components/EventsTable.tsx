@@ -71,7 +71,7 @@ export default function EventsTable({ events }: EventsTablePropsType) {
     <div className={styles.container}>
       <h2>Matches</h2>
       {
-        events.map((event) => (
+        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((event) => (
           <div key={event.date}>
             <EventComponent date={event.date}>
               <MatchesComponent matches={event.matches} />
