@@ -224,6 +224,124 @@
         "score_b": 1
       }
     ]
+  },
+  {
+    "date": "2022-06-19",
+    "matches": [
+      {
+        "player_a": "anders",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "alistair",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "anders",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "anders",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "anders",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "anders",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "ossama",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "ossama",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "anders",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "ossama",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "anders",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "irina",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "alistair",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "ossama",
+        "score_a": 1,
+        "score_b": 0
+      }
+    ]
   }
 ]
-
