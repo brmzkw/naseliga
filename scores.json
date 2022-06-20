@@ -343,5 +343,22 @@
         "score_b": 0
       }
     ]
+  },
+  {
+    "date": "2022-06-20",
+    "matches": [
+      {
+        "player_a": "julien",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 3
+      },
+      {
+        "player_a": "julien",
+        "player_b": "greg",
+        "score_a": 2,
+        "score_b": 3
+      }
+    ]
   }
 ]
