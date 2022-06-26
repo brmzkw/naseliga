@@ -360,5 +360,375 @@
         "score_b": 3
       }
     ]
+  },
+  {
+    "date": "2022-06-26",
+    "matches": [
+      {
+        "player_a": "chris",
+        "player_b": "julien",
+        "score_a": 3,
+        "score_b": 0
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "greg",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "shawky",
+        "score_a": 3,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "greg",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "filip",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "filip",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "irina",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "filip",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "filip",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "filip",
+        "player_b": "greg",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "chris",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "filip",
+        "player_b": "irina",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "filip",
+        "player_b": "irina",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "irina",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "chris",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "shawky",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "julien",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "greg",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "greg",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "chris",
+        "score_a": 1,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "shawky",
+        "score_a": 4,
+        "score_b": 0
+      },
+      {
+        "player_a": "greg",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 1
+      },
+      {
+        "player_a": "vašek",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      }
+    ]
+  },
+  {
+    "date": "2022-07-03",
+    "matches": [
+      {
+        "player_a": "anders",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "shawky",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "alistair",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "shawky",
+        "score_a": 3,
+        "score_b": 0
+      },
+      {
+        "player_a": "anders",
+        "player_b": "alistair",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "kostia",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "julien",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "anders",
+        "player_b": "shawky",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "kostia",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "ossama",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "julien",
+        "player_b": "shawky",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "anders",
+        "player_b": "kostia",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "andy",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "anders",
+        "player_b": "irina",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "alistair",
+        "player_b": "chris",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "kostia",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "shawky",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "irina",
+        "player_b": "chris",
+        "score_a": 0,
+        "score_b": 1
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "andy",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "julien",
+        "player_b": "kostia",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "shawky",
+        "player_b": "andy",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "ossama",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "kostia",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      }
+    ]
   }
 ]
