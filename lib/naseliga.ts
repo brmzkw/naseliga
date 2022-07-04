@@ -71,9 +71,9 @@ export default class Naseliga {
   public leaderboard: LeaderBoardEntry[]
 
   constructor() {
-    this.events = SCORES;
+    this.events = [...SCORES];
     this.leaderboard = computeScores(
-      SCORES.map((event) => event.matches).flat()
+      this.events.map((event) => event.matches).flat()
     );
   }
 }
