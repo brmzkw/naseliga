@@ -730,5 +730,64 @@
         "score_b": 0
       }
     ]
+  },
+    {
+    "date": "2022-07-04",
+    "matches": [
+      {
+        "player_a": "greg",
+        "player_b": "julien",
+        "score_a": 1,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "greg",
+        "player_b": "andy",
+        "score_a": 5,
+        "score_b": 0
+      },
+      {
+        "player_a": "andy",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "player_a": "chris",
+        "player_b": "greg",
+        "score_a": 4,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "andy",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "greg",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "chris",
+        "player_b": "julien",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "player_a": "andy",
+        "player_b": "julien",
+        "score_a": 0,
+        "score_b": 3
+      }
+    ]
   }
 ]
