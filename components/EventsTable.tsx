@@ -12,12 +12,12 @@ function MatchComponent({ match }: MatchComponentPropsType) {
   return (
     <div className={styles.match}>
       <div className={styles.players}>
-        <div className={match.score_a > match.score_b ? styles.winner : styles.loser}>{match.player_a}</div>
-        <div className={match.score_b > match.score_a ? styles.winner : styles.loser}>{match.player_b}</div>
+        <div className={match.scoreA > match.scoreB ? styles.winner : styles.loser}>{match.playerA}</div>
+        <div className={match.scoreB > match.scoreA ? styles.winner : styles.loser}>{match.playerB}</div>
       </div>
       <div className={styles.scores}>
-        <div>{match.score_a}</div>
-        <div>{match.score_b}</div>
+        <div>{match.scoreA}</div>
+        <div>{match.scoreB}</div>
       </div>
     </div>
   );

@@ -5,12 +5,13 @@ import Head from 'next/head';
 import Image from 'next/image';
 import type { NextPage } from 'next';
 
+
 import styles from '../styles/Home.module.css';
 
 import EventsTable from '../components/EventsTable';
 import LeaderBoardTable from '../components/LeaderBoardTable';
-import Naseliga, { Event, LeaderBoardEntry } from '../lib/naseliga';
-
+import Naseliga, { getEventsWithMatches, Event, LeaderBoardEntry } from '../lib/naseliga';
+import { prisma } from '../db';
 
 type PropsType = {
     leaderboard: LeaderBoardEntry[]
@@ -38,7 +39,15 @@ export default function Home({ leaderboard, events }: PropsType)  {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const naseliga = new Naseliga();
+  let events;
+
+  try {
+    events = await getEventsWithMatches();
+  } finally {
+    await prisma.$disconnect();
+  }
+
+  const naseliga = new Naseliga(events);
 
   return {
     props: {

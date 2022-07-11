@@ -1,11 +1,30 @@
-import SCORES from '../scores.json';
+import { Prisma } from '@prisma/client'
 
+import { prisma } from '../db';
+
+export async function getEventsWithMatches() {
+  return prisma.event.findMany({
+      include: {
+        matches: {
+          include: {
+            playerA: true,
+            playerB: true,
+          }
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+}
+
+type EventsWithMatches = Prisma.PromiseReturnType<typeof getEventsWithMatches>;
 
 export type Match = {
-  player_a: string
-  player_b: string
-  score_a: number
-  score_b: number
+  playerA: string
+  playerB: string
+  scoreA: number
+  scoreB: number
 }
 
 export type Event = {
@@ -19,46 +38,46 @@ export type LeaderBoardEntry = {
 }
 
 function computeNewScores(
-  score_a: number,
-  score_b: number,
-  rounds_a: number,
-  total_rounds: number
+  scoreA: number,
+  scoreB: number,
+  roundsA: number,
+  totalRounds: number
 ): [number, number] {
-  const qa = Math.pow(10, score_a / 400);
-  const qb = Math.pow(10, score_b / 400);
+  const qa = Math.pow(10, scoreA / 400);
+  const qb = Math.pow(10, scoreB / 400);
 
-  const expected_a_on_b = qa / (qa + qb)
-  const expected_b_on_a = 1 - expected_a_on_b
+  const expectedAOnB = qa / (qa + qb)
+  const expectedBOnA = 1 - expectedAOnB
 
-  const percent_win_a = rounds_a * 100 / total_rounds
-  const percent_win_b = 100 - percent_win_a
+  const percentWinA = roundsA * 100 / totalRounds
+  const percentWinB = 100 - percentWinA
 
-  const new_a = score_a + (percent_win_a - expected_a_on_b * 100)
-  const new_b = score_b + (percent_win_b - expected_b_on_a * 100)
+  const newA = scoreA + (percentWinA - expectedAOnB * 100)
+  const newB = scoreB + (percentWinB - expectedBOnA * 100)
 
-  return [new_a, new_b];
+  return [newA, newB];
 }
 
 function computeScores(matches: Match[]): LeaderBoardEntry[] {
   const scores: {[player: string]: number} = {};
 
   matches.forEach((match) => {
-    if (!(match.player_a in scores)) {
-      scores[match.player_a] = 1500;
+    if (!(match.playerA in scores)) {
+      scores[match.playerA] = 1500;
     }
-    if (!(match.player_b in scores)) {
-      scores[match.player_b] = 1500;
+    if (!(match.playerB in scores)) {
+      scores[match.playerB] = 1500;
     }
 
-    const [new_score_a, new_score_b] = computeNewScores(
-      scores[match.player_a],
-      scores[match.player_b],
-      match.score_a,
-      match.score_a + match.score_b
+    const [newScoreA, newScoreB] = computeNewScores(
+      scores[match.playerA],
+      scores[match.playerB],
+      match.scoreA,
+      match.scoreA + match.scoreB
     );
 
-    scores[match.player_a] = Math.round(new_score_a);
-    scores[match.player_b] = Math.round(new_score_b);
+    scores[match.playerA] = Math.round(newScoreA);
+    scores[match.playerB] = Math.round(newScoreB);
   });
 
   // Sort by score DESC
@@ -70,10 +89,24 @@ export default class Naseliga {
   public events: Event[]
   public leaderboard: LeaderBoardEntry[]
 
-  constructor() {
-    this.events = [...SCORES];
+  constructor(events : EventsWithMatches) {
+    this.events = events.map((event) => ({
+      date: event.date.toDateString(),
+      matches: event.matches.map((match) => ({
+        playerA: match.playerA.name,
+        playerB: match.playerB.name,
+        scoreA: match.scoreA,
+        scoreB: match.scoreB,
+      })),
+    }));
+
     this.leaderboard = computeScores(
-      this.events.map((event) => event.matches).flat()
+      events.map((event) => event.matches.map((match) => ({
+        playerA: match.playerA.name,
+        playerB: match.playerB.name,
+        scoreA: match.scoreA,
+        scoreB: match.scoreB,
+      }))).flat()
     );
   }
 }

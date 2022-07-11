@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id      Int      @id @default(autoincrement())
+  title   String   @default("") @db.VarChar
+  date    DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+
+  matches Match[]
+
+  @@map("events")
+}
+
+model Player {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique @db.VarChar
+
+  MatchsA Match[] @relation("PlayerA")
+  MatchsB Match[] @relation("PlayerB")
+
+  @@map("players")
+}
+
+model Match {
+  id             Int     @id @default(autoincrement())
+  eventId        Int @map("event")
+  playerAId      Int @map("player_a")
+  playerBId      Int @map("player_b")
+  scoreA         Int @map("score_a")
+  scoreB         Int @map("score_b")
+
+  event          Event  @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event")
+  playerA Player @relation("PlayerA", fields: [playerAId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_a")
+  playerB Player @relation("PlayerB", fields: [playerBId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_b")
+
+  @@map("matches")
+}
