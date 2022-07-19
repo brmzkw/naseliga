@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Event {
@@ -20,6 +21,7 @@ model Event {
 model Player {
   id              Int      @id @default(autoincrement())
   name            String   @unique @db.VarChar
+  country         String   @default("") @db.VarChar
 
   MatchsA Match[] @relation("PlayerA")
   MatchsB Match[] @relation("PlayerB")
