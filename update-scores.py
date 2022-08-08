@@ -25,7 +25,15 @@ def parse_scores(stream):
         )
 
 
-def generate_sql(scores, days_ago):
+def players_queries(scores):
+    players = set()
+    for score in scores:
+        players.add(score.player_a)
+        players.add(score.player_b)
+    for player in players:
+        yield f"SELECT CASE WHEN COUNT(*) = 1 THEN 'ok' ELSE '!!! missing {player} !!!' END CASE FROM players WHERE name = '{player}';"
+
+def scores_queries(scores, days_ago):
     date = (datetime.now() - timedelta(days=days_ago)).strftime('%Y-%m-%d')
     yield f"INSERT INTO events(date) VALUES('{date}');"
     for score in scores:
@@ -47,11 +55,15 @@ VALUES(
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-p', action='store_true', default=False)
     parser.add_argument('-f', type=argparse.FileType('r'), required=True)
     parser.add_argument('-d', type=int, default=0)
     args = parser.parse_args()
     scores = parse_scores(args.f)
-    queries = generate_sql(scores, args.d)
+    if args.p:
+        queries = players_queries(scores)
+    else:
+        queries = scores_queries(scores, args.d)
     print('\n'.join(queries))
 
 
