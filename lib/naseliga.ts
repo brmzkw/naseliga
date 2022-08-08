@@ -2,6 +2,26 @@ import { Prisma } from '@prisma/client'
 
 import { prisma } from '../db';
 
+/*
+ * Returns the list of events such as:
+ *
+ * {
+ *   id: <int>
+ *   title: <string>
+ *   date: <date>
+ *   matches: [
+ *     {
+ *       playerA: { name: <string>, country: <string> }
+ *       playerB: { name: <string>, country: <string> }
+ *       scoreA: <int>
+ *       scoreB: <int>
+ *     },
+ *     ...
+ *   ],
+ *   ...
+ * }
+ *
+ */
 export async function getEventsWithMatches() {
   return prisma.event.findMany({
       include: {
@@ -37,6 +57,12 @@ export type LeaderBoardEntry = {
   score: number
 }
 
+/*
+ * Given the scores of two players, the number of rounds won by A and the total
+ * number of rounds played, returns the new scores for both players.
+ *
+ * https://en.wikipedia.org/wiki/Elo_rating_system
+ */
 function computeNewScores(
   scoreA: number,
   scoreB: number,
