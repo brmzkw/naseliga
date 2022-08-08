@@ -40,6 +40,18 @@ model Match {
   event          Event  @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event")
   playerA Player @relation("PlayerA", fields: [playerAId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_a")
   playerB Player @relation("PlayerB", fields: [playerBId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_b")
+  ranking Ranking?
 
   @@map("matches")
+}
+
+model Ranking {
+  matchId Int @id @map("match")
+
+  rankA Int @map("rank_a")
+  rankB Int @map("rank_b")
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event")
+
+  @@map("rankings")
 }
