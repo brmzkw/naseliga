@@ -3,15 +3,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Event {
-  id      Int      @id @default(autoincrement())
-  title   String   @default("") @db.VarChar
-  date    DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+  id    Int      @id @default(autoincrement())
+  title String   @default("") @db.VarChar
+  date  DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
 
   matches Match[]
 
@@ -19,9 +19,9 @@ model Event {
 }
 
 model Player {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique @db.VarChar
-  country         String   @default("") @db.VarChar
+  id      Int    @id @default(autoincrement())
+  name    String @unique @db.VarChar
+  country String @default("") @db.VarChar
 
   MatchsA Match[] @relation("PlayerA")
   MatchsB Match[] @relation("PlayerB")
@@ -30,16 +30,16 @@ model Player {
 }
 
 model Match {
-  id             Int     @id @default(autoincrement())
-  eventId        Int @map("event")
-  playerAId      Int @map("player_a")
-  playerBId      Int @map("player_b")
-  scoreA         Int @map("score_a")
-  scoreB         Int @map("score_b")
+  id        Int @id @default(autoincrement())
+  eventId   Int @map("event")
+  playerAId Int @map("player_a")
+  playerBId Int @map("player_b")
+  scoreA    Int @map("score_a")
+  scoreB    Int @map("score_b")
 
-  event          Event  @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event")
-  playerA Player @relation("PlayerA", fields: [playerAId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_a")
-  playerB Player @relation("PlayerB", fields: [playerBId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_b")
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event")
+  playerA Player   @relation("PlayerA", fields: [playerAId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_a")
+  playerB Player   @relation("PlayerB", fields: [playerBId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player_b")
   ranking Ranking?
 
   @@map("matches")
