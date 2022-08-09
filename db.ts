@@ -109,7 +109,7 @@ export async function getPlayerRanking(
   if (!match?.ranking) {
     return 1500;
   }
-  return match.playerAId == playerId ? match.ranking.rankA : match.ranking.rankB;
+  return match.playerAId === playerId ? match.ranking.rankA : match.ranking.rankB;
 }
 
 export type GetPlayerRanking = Prisma.PromiseReturnType<typeof getPlayerRanking>;

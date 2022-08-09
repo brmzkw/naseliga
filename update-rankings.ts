@@ -54,8 +54,8 @@ async function getNewRankings(
 async function main() {
   const events = await listUnrankedEvents();
 
-  for (let event of events) {
-    for (let match of event.matches) {
+  for (const event of events) {
+    for (const match of event.matches) {
       const [newRankA, newRankB] = await getNewRankings(match.playerAId, match.scoreA, match.playerBId, match.scoreB);
 
         await prisma.ranking.upsert({
@@ -77,6 +77,7 @@ async function main() {
 
   const entries = await listLeaderboard();
   for (const entry of entries) {
+    /* tslint:disable-next-line */
     console.log(`[${entry.player.country}] ${entry.score} - ${entry.player.name}`);
   }
 
