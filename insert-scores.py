@@ -33,6 +33,7 @@ def players_queries(scores):
     for player in players:
         yield f"SELECT CASE WHEN COUNT(*) = 1 THEN 'ok' ELSE '!!! missing {player} !!!' END CASE FROM players WHERE name = '{player}';"
 
+
 def scores_queries(scores, days_ago):
     date = (datetime.now() - timedelta(days=days_ago)).strftime('%Y-%m-%d')
     yield f"INSERT INTO events(date) VALUES('{date}');"
@@ -50,7 +51,6 @@ VALUES(
     {score.score_b}
 );
 '''
-
 
 
 def main():

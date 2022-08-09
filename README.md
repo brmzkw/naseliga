@@ -1,7 +1,6 @@
-[naseliga.com](https://naseliga.com)
+Source code of [naseliga.com](https://naseliga.com)
 
-
-### Generate migration
+### Configuration
 
 Put the following content in `.env`:
 
@@ -9,6 +8,16 @@ Put the following content in `.env`:
 DATABASE_URL="postgres://<porduction database URI>"
 SHADOW_DATABASE_URL="postgres://postgres:password@localhost:5432/shadow"
 ```
+
+### Update scores
+
+Insert new matches in database with [./insert-scores.py](insert-scores.py) then compute the new rankings:
+
+```
+$> npm run update-rankings
+```
+
+### Generate migration
 
 Run the shadow database:
 

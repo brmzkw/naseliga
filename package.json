@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-rankings": "npx ts-node --skip-project update-rankings.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0",
