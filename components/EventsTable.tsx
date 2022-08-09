@@ -31,8 +31,8 @@ function MatchesComponent({ matches }: MatchesComponentPropsType) {
   return (
     <ul className={styles.matches}>
       {
-        matches.map((match, idx) => (
-          <li key={idx}>
+        matches.map((match) => (
+          <li key={match.id}>
             <MatchComponent match={match} />
           </li>
         ))
