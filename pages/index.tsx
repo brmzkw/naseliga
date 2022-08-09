@@ -10,12 +10,18 @@ import styles from '../styles/Home.module.css';
 
 import EventsTable from '../components/EventsTable';
 import LeaderBoardTable from '../components/LeaderBoardTable';
-import Naseliga, { getEventsWithMatches, Event, LeaderBoardEntry } from '../lib/naseliga';
-import { prisma } from '../db';
+
+import {
+  prisma,
+  ListAllEvents,
+  listAllEvents,
+  ListLeaderboard,
+  listLeaderboard,
+} from '../db';
 
 type PropsType = {
-    leaderboard: LeaderBoardEntry[]
-    events: Event[],
+  leaderboard: ListLeaderboard,
+  events: ListAllEvents
 }
 
 export default function Home({ leaderboard, events }: PropsType)  {
@@ -35,24 +41,22 @@ export default function Home({ leaderboard, events }: PropsType)  {
       <footer className={styles.footer}>
       </footer>
     </div>
-  )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  let events;
-
   try {
-    events = await getEventsWithMatches();
+    const leaderboard = await listLeaderboard();
+    const events = await listAllEvents();
+    return {
+      props: {
+        leaderboard,
+        // events contains Date objects. Force conversion to strings, required
+        // to serialize paramete given to the component.
+        events: JSON.parse(JSON.stringify(events)),
+      }
+    };
   } finally {
     await prisma.$disconnect();
-  }
-
-  const naseliga = new Naseliga(events);
-
-  return {
-    props: {
-      leaderboard: naseliga.leaderboard,
-      events: naseliga.events,
-    },
   }
 }

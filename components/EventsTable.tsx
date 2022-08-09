@@ -1,19 +1,19 @@
 import React from 'react';
 
 import styles from '../styles/EventsTable.module.css';
-import { Event, Match } from '../lib/naseliga';
 
+import type { ListAllEvents } from '../db';
 
 type MatchComponentPropsType = {
-  match: Match
+  match: ListAllEvents[number]['matches'][number],
 }
 
 function MatchComponent({ match }: MatchComponentPropsType) {
   return (
     <div className={styles.match}>
       <div className={styles.players}>
-        <div className={match.scoreA > match.scoreB ? styles.winner : styles.loser}>{match.playerA}</div>
-        <div className={match.scoreB > match.scoreA ? styles.winner : styles.loser}>{match.playerB}</div>
+        <div className={match.scoreA > match.scoreB ? styles.winner : styles.loser}>{match.playerA.name}</div>
+        <div className={match.scoreB > match.scoreA ? styles.winner : styles.loser}>{match.playerB.name}</div>
       </div>
       <div className={styles.scores}>
         <div>{match.scoreA}</div>
@@ -24,7 +24,7 @@ function MatchComponent({ match }: MatchComponentPropsType) {
 }
 
 type MatchesComponentPropsType = {
-  matches: Match[]
+  matches: ListAllEvents[number]['matches'],
 }
 
 function MatchesComponent({ matches }: MatchesComponentPropsType) {
@@ -41,7 +41,7 @@ function MatchesComponent({ matches }: MatchesComponentPropsType) {
   );
 }
 
-type EventComponentPropsType = React.PropsWithChildren<{date: string}>
+type EventComponentPropsType = React.PropsWithChildren<{date: Date}>
 
 function EventComponent({ date, children }: EventComponentPropsType) {
   const [clicked, setClicked] = React.useState(false);
@@ -49,12 +49,17 @@ function EventComponent({ date, children }: EventComponentPropsType) {
     setClicked((prev) => !prev);
   };
 
+  const dateText = new Date(date).toLocaleDateString(
+    'en-US',
+    { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+  );
+
   return (
     <>
       {!clicked && (<span>&rarr;</span>)}
       {clicked && (<span>&darr;</span>)}
       <button className={styles.button} onClick={onClick}>
-        {date}
+        {dateText}
       </button>
 
       {clicked && children }
@@ -63,7 +68,7 @@ function EventComponent({ date, children }: EventComponentPropsType) {
 }
 
 type EventsTablePropsType = {
-  events: Event[]
+  events: ListAllEvents,
 }
 
 export default function EventsTable({ events }: EventsTablePropsType) {
@@ -71,8 +76,8 @@ export default function EventsTable({ events }: EventsTablePropsType) {
     <div className={styles.container}>
       <h2>Matches</h2>
       {
-        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((event) => (
-          <div key={event.date}>
+        events.map((event) => (
+          <div key={event.id}>
             <EventComponent date={event.date}>
               <MatchesComponent matches={event.matches} />
             </EventComponent>
