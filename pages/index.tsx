@@ -9,7 +9,7 @@ import type { NextPage } from 'next';
 import styles from '../styles/Home.module.css';
 
 import EventsTable from '../components/EventsTable';
-import LeaderBoardTable from '../components/LeaderBoardTable';
+import LeaderboardTable from '../components/LeaderboardTable';
 
 import {
   prisma,
@@ -34,7 +34,7 @@ export default function Home({ leaderboard, events }: PropsType)  {
       </Head>
 
       <main>
-        <LeaderBoardTable leaderboard={leaderboard} />
+        <LeaderboardTable leaderboard={leaderboard} />
         <EventsTable events={events} />
       </main>
 
