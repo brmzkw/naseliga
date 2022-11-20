@@ -18,8 +18,8 @@ def parse_scores(stream):
         line = line.strip()
         player_a, player_b, score_a, score_b = line.split()
         yield score(
-            player_a=player_a,
-            player_b=player_b,
+            player_a=player_a.lower(),
+            player_b=player_b.lower(),
             score_a=score_a,
             score_b=score_b
         )
