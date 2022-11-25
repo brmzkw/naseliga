@@ -85,7 +85,7 @@ const Leaderboard: React.FC = () => {
         }>
           <div className="m-3"><strong>{idx + 1}</strong></div>
           <div className="m-3 w-8">
-            <CircleFlag countryCode={entry.country.toLowerCase()} />
+            {entry.country && <CircleFlag countryCode={entry.country.toLowerCase()} />}
           </div>
           <div className="flex-1 text-xl capitalize">{entry.name}</div>
           <div><strong>{entry.score}</strong></div>
