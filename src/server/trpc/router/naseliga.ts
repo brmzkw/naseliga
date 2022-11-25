@@ -19,7 +19,16 @@ type PlayerWithScore = Player & { score: number }
 
 export const naseligaRouter = router({
     getLeaderBoard: publicProcedure
-        // .input(z.object({ all: z.boolean().default(false) }).nullish().default({}))
+        .input(z.object({
+            after: z.date()
+        }).default(() => {
+            const after = new Date();
+            // three months ago
+            after.setMonth(after.getMonth() - 2);
+            return ({
+                after,
+            })
+        }))
         .query(async ({ ctx, input }) => {
             const leaderboard = await ctx.prisma.$queryRaw<PlayerWithScore[]>(
                 Prisma.sql`
@@ -39,8 +48,12 @@ export const naseligaRouter = router({
                         FROM rankings
                         JOIN matches
                             ON rankings.match = matches.id
+                        JOIN events
+                            ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_a
+                        WHERE
+                            events.date >= ${input.after}
 
                         UNION
 
@@ -51,8 +64,12 @@ export const naseligaRouter = router({
                         FROM rankings
                         JOIN matches
                             ON rankings.match = matches.id
+                        JOIN events
+                            ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_b
+                        WHERE
+                            events.date >= ${input.after}
                     ) subq
                     JOIN players
                         ON players.id = subq.player
