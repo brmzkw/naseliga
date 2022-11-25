@@ -1,10 +1,8 @@
 import { router } from "../trpc";
 import { authRouter } from "./auth";
-import { exampleRouter } from "./example";
 import { naseligaRouter } from "./naseliga";
 
 export const appRouter = router({
-  example: exampleRouter,
   auth: authRouter,
   naseliga: naseligaRouter,
 });
