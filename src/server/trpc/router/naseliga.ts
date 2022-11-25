@@ -1,6 +1,3 @@
-
-// umport { z } from "zod";
-
 import { Prisma } from '@prisma/client'
 import { z } from 'zod';
 
@@ -82,14 +79,3 @@ export const naseligaRouter = router({
         }),
 
 });
-
-    //   hello: publicProcedure
-    //     .input(z.object({ text: z.string().nullish() }).nullish())
-    //     .query(({ input }) => {
-    //       return {
-    //         greeting: `Hello ${input?.text ?? "world"}`,
-    //       };
-    //     }),
-    //   getAll: publicProcedure.query(({ ctx }) => {
-    //     return ctx.prisma.example.findMany();
-    //   }),
