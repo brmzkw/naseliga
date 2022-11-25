@@ -90,8 +90,11 @@ const Leaderboard: React.FC = () => {
           <div className="flex-1 text-xl capitalize">{entry.name}</div>
           <div><strong>{entry.score}</strong></div>
         </div>
-      )
-      }
+      )}
+      { /* default */}
+      {!resp.data && [...Array(5)].map((_, idx) =>
+        <div key={idx} className="flex rounded-full m-3 p-10 bg-zinc-50 animate-pulse" />
+      )}
     </div >
   );
 };
