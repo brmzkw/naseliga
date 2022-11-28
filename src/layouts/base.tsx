@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 const BaseLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -23,14 +24,25 @@ const BaseLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 export default BaseLayout;
 
 const Menu: React.FC = () => {
+    const router = useRouter();
+    const menus = [
+        {
+            path: "/",
+            text: "Leaderboard",
+        },
+        {
+            path: "/events",
+            text: "Events",
+        },
+    ];
+
     return (
         <menu className="containe flex bg-pink-900 text-white">
-            <li className="p-3 font-bold">
-                <Link href="/">Leaderboard </Link>
-            </li>
-            <li className="p-3">
-                <Link href="/events">Events</Link>
-            </li>
+            {menus.map((menu) =>
+                <li key={menu.path} className={`p-3 ` + (menu.path === router.asPath ? 'font-bold' : '')}>
+                    <Link href={menu.path}>{menu.text}</Link>
+                </li>
+            )}
         </menu>
     );
 };
