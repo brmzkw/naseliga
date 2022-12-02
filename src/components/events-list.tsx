@@ -14,9 +14,9 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
         <>
             <h2 className="font-bold text-xl">Last events</h2>
             <ul className="mt-2">
-                {events?.map((event) =>
+                {events?.map((event, idx) =>
                     <li key={event.id}>
-                        <Event event={event} />
+                        <Event defaultOpen={idx == 0} event={event} />
                     </li>
                 )}
             </ul>
@@ -27,11 +27,12 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
 export default EventsList;
 
 type EventProps = {
-    event: NonNullable<EventsListProps["events"]>[number]
+    defaultOpen: boolean,
+    event: NonNullable<EventsListProps["events"]>[number],
 }
 
-const Event: React.FC<EventProps> = ({ event }) => {
-    const [clicked, setClicked] = React.useState(false);
+const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
+    const [clicked, setClicked] = React.useState(defaultOpen);
 
     const numPlayers = [...new Set(
         event.matches.map((match) => [match.playerAId, match.playerBId]).flat()
