@@ -10,12 +10,14 @@ type EventsListProps = {
 }
 
 const EventsList: React.FC<EventsListProps> = ({ events }) => {
+    const defaultData = Array.from(Array(10).keys()).map(() => null);
+
     return (
         <>
             <h2 className="font-bold text-xl">Last events</h2>
             <ul className="mt-2">
-                {events?.map((event, idx) =>
-                    <li key={event.id}>
+                {(events || defaultData).map((event, idx) =>
+                    <li key={event?.id || idx}>
                         <Event defaultOpen={idx == 0} event={event} />
                     </li>
                 )}
@@ -28,36 +30,36 @@ export default EventsList;
 
 type EventProps = {
     defaultOpen: boolean,
-    event: NonNullable<EventsListProps["events"]>[number],
+    event: NonNullable<EventsListProps["events"]>[number] | null,
 }
 
 const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
     const [clicked, setClicked] = React.useState(defaultOpen);
 
     const numPlayers = [...new Set(
-        event.matches.map((match) => [match.playerAId, match.playerBId]).flat()
+        event?.matches.map((match) => [match.playerAId, match.playerBId]).flat()
     )].length;
     return (
         <>
             <div
-                className="flex border-l-4 mt-4 border-l-purple-700 cursor-pointer hover:bg-purple-500 hover:text-white"
+                className={`flex border-l-4 mt-4 border-l-purple-700 cursor-pointer hover:bg-purple-500 hover:text-white ${event || 'animate-pulse'}`}
                 onClick={() => setClicked((prev) => !prev)}
             >
                 <div className="p-3 text-center">
-                    <div>{event.date.toLocaleString('default', { month: 'short' })}</div>
-                    <div className="font-bold text-2xl">{event.date.toLocaleString('default', { day: 'numeric' })}</div>
+                    <div>{event?.date.toLocaleString('default', { month: 'short' })}</div>
+                    <div className="font-bold text-2xl">{event?.date.toLocaleString('default', { day: 'numeric' }) || "..."}</div>
                 </div>
 
                 <div className="p-3">
-                    <div>{numPlayers} players</div>
-                    <div>{event.matches.length} matches</div>
+                    <div>{event && <>{numPlayers} players</>}</div>
+                    <div>{event && <>{event?.matches.length} matches</>}</div>
                 </div>
             </div>
 
             {clicked &&
                 <table className="m-auto">
                     <tbody>
-                        {event.matches.map((match) =>
+                        {event?.matches.map((match) =>
                             <tr key={match.id} className={`border-b border-purple-700`}>
                                 <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
                                     <div className="w-8 mr-2">
