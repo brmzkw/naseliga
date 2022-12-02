@@ -1,5 +1,5 @@
 DB_CONTAINER=naseliga-db
-DB_REGEXP="DATABASE_URL=postgres:\/\/(.*):(.*)@(.*):(.*)\/(.*)"
+DB_REGEXP="^DATABASE_URL=postgres:\/\/(.*):(.*)@(.*):(.*)\/(.*)"
 
 DB_USER=$(shell sed -E -n 's/'${DB_REGEXP}'/\1/p' .env)
 DB_PASSWORD=$(shell sed -E -n 's/'${DB_REGEXP}'/\2/p' .env)
