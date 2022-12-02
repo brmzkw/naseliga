@@ -12,7 +12,7 @@ const playerData = Prisma.validator<Prisma.PlayerArgs>()({
 });
 
 type Player = Prisma.PlayerGetPayload<typeof playerData>
-type PlayerWithScore = Player & { score: number }
+export type PlayerWithScore = Player & { score: number }
 
 export const naseligaRouter = router({
     getLeaderBoard: publicProcedure
