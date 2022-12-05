@@ -11,7 +11,6 @@ type EventsListProps = {
 
 const EventsList: React.FC<EventsListProps> = ({ events }) => {
     const defaultData = Array.from(Array(10).keys()).map(() => null);
-
     return (
         <>
             <h2 className="font-bold text-xl">Last events</h2>
