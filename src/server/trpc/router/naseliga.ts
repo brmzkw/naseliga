@@ -97,6 +97,9 @@ export const naseligaRouter = router({
     getPlayers: publicProcedure.query(({ ctx }) => {
         return ctx.prisma.player.findMany({
             select: playerData.select,
+            orderBy: {
+                name: 'asc',
+            },
         });
     }),
 });
