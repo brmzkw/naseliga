@@ -38,7 +38,7 @@ const HomePage: NextPage = () => {
           <img
             className="rounded-full h-10 w-10"
             src={(sessionData?.user?.image && sessionData.user.image) || "/GitHub-Mark/PNG/GitHub-Mark-64px.png"}
-            alt="Profile picture"
+            title={sessionData ? "Logout" : "Login with GitHub"}
           />
         </button>
 
