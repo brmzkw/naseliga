@@ -39,7 +39,7 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
                     </button>
                 </div>
 
-                {sessionData &&
+                {sessionData?.user?.isAdmin &&
                     <ul className="flex font-bold shadow-grey shadow-md bg-stone-100 text-slate-800">
                         <li className="m-3"><Link href="/">Leaderboard</Link></li>
                         <li className="m-3"><Link href="/players">Players</Link></li>
