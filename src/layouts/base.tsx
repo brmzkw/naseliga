@@ -42,7 +42,7 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
                 {sessionData?.user?.isAdmin &&
                     <ul className="flex font-bold shadow-grey shadow-md bg-stone-100 text-slate-800">
                         <li className="m-3"><Link href="/">Leaderboard</Link></li>
-                        <li className="m-3"><Link href="/players">Players</Link></li>
+                        <li className="m-3"><Link href="/admin">Administration</Link></li>
                     </ul>}
             </menu>
 
