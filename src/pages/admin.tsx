@@ -10,7 +10,6 @@ import { countries, CircleFlag } from "react-circle-flags";
 import { inferRouterOutputs } from "@trpc/server";
 import { naseligaRouter } from "../server/trpc/router/naseliga";
 import { useForm } from "react-hook-form";
-import { waitUntilSymbol } from "next/dist/server/web/spec-extension/fetch-event";
 
 
 const font = Caveat()
@@ -104,18 +103,19 @@ type NewPlayerFormValues = {
 };
 
 const NewPlayer: React.FC = () => {
+    const { register, handleSubmit, reset } = useForm<NewPlayerFormValues>();
+
     const utils = trpc.useContext();
     const mutation = trpc.naseliga.addPlayer.useMutation({
         onSuccess: () => {
             utils.naseliga.getPlayers.invalidate();
+            reset();
         },
         onError: (err) => {
             console.error('Error while creating player', err);
         },
 
     });
-
-    const { register, handleSubmit } = useForm<NewPlayerFormValues>();
 
     const onSubmit = ((data: NewPlayerFormValues) => {
         mutation.mutate(data);
