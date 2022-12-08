@@ -2,7 +2,6 @@ import type { inferRouterOutputs } from '@trpc/server';
 import type { naseligaRouter } from "../server/trpc/router/naseliga";
 
 import { CircleFlag } from 'react-circle-flags'
-import { PropsWithChildren } from 'react';
 import React from 'react';
 
 type EventsListProps = {

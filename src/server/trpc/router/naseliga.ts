@@ -102,4 +102,42 @@ export const naseligaRouter = router({
             },
         });
     }),
+
+    addPlayer: publicProcedure
+        .input(z.object({
+            name: z.string(),
+            country: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const player = await ctx.prisma.player.create({
+                data: {
+                    name: input.name,
+                    country: input.country,
+                },
+            });
+            return {
+                player,
+            };
+        }),
+
+    removePlayer: publicProcedure
+        .input(z.object({
+            id: z.number(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const player = await ctx.prisma.player.delete({
+                where: {
+                    id: input.id,
+                },
+            });
+            return {
+                player,
+            };
+        }),
 });
