@@ -179,6 +179,17 @@ const RemoveButton = ({ ...props }) => {
     );
 };
 
+const AddButton = ({ ...props }) => {
+    return (
+        <button type="button" className="bg-green-800 rounded-md text-white flex m-1 items-center p-2" {...props}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>Add</div>
+        </button>
+    );
+};
+
 const NewPlayer: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<PlayerFormValues>();
 
@@ -215,12 +226,7 @@ const NewPlayer: React.FC = () => {
                     required
                 />
 
-                <button className="bg-green-800 rounded-md text-white flex m-1 items-center p-2" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div>Add</div>
-                </button>
+                <AddButton type="submit" />
             </form >
         </div>
     );
