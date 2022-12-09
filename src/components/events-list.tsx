@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSession } from 'next-auth/react';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { inferRouterOutputs } from '@trpc/server';
 import { CircleFlag } from 'react-circle-flags'
 
 import { eventsRouter, EventsRouterOutput, type EventsRouterInput } from '../server/trpc/router/events';
@@ -18,7 +18,7 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
     const defaultData = Array.from(Array(10).keys()).map(() => null);
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pl-2">
             {sessionData?.user?.isAdmin && (
                 <>
                     <h2 className="font-bold text-xl">Create a new event</h2>
@@ -138,7 +138,7 @@ const NewEvent: React.FC = () => {
     };
 
     return (
-        <form className="flex" onSubmit={handleSubmit(createNewEvent)}>
+        <form className="flex gap-2" onSubmit={handleSubmit(createNewEvent)}>
             <input
                 className="border border-gray-300 p-2"
                 type="text"
