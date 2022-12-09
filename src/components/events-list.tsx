@@ -27,9 +27,9 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
             )}
 
             <h2 className="font-bold text-xl">Last events</h2>
-            <ul className="mt-2">
+            <ul>
                 {(events || defaultData).map((event, idx) =>
-                    <li key={event?.id || idx}>
+                    <li key={event?.id || idx} className="[&:not(:first-child)]:mt-4">
                         <Event defaultOpen={idx == 0} event={event} />
                     </li>
                 )}
@@ -54,7 +54,7 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
     return (
         <>
             <div
-                className={`flex gap-5 p-3 items-center border-l-4 mt-4 border-l-purple-700 cursor-pointer hover:bg-purple-500 hover:text-white ${event || 'animate-pulse'}`}
+                className={`flex gap-5 p-3 items-center border-l-4  border-l-purple-700 cursor-pointer hover:bg-purple-500 hover:text-white ${event || 'animate-pulse'}`}
                 onClick={() => setClicked((prev) => !prev)}
             >
                 <div className="text-center">
