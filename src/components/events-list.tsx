@@ -3,9 +3,10 @@ import type { leaderboardRouter } from "../server/trpc/router/leaderboard";
 
 import { CircleFlag } from 'react-circle-flags'
 import React from 'react';
+import { eventsRouter } from '../server/trpc/router/events';
 
 type EventsListProps = {
-    events?: inferRouterOutputs<typeof leaderboardRouter>['getEvents']
+    events?: inferRouterOutputs<typeof eventsRouter>['list']
 }
 
 const EventsList: React.FC<EventsListProps> = ({ events }) => {
