@@ -4,8 +4,8 @@ import { useSession } from 'next-auth/react';
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { CircleFlag } from 'react-circle-flags'
 
-import { eventsRouter, type EventsRouterInput } from '../server/trpc/router/events';
-import { AddButton } from './buttons';
+import { eventsRouter, EventsRouterOutput, type EventsRouterInput } from '../server/trpc/router/events';
+import { AddButton, RemoveButton } from './buttons';
 import { useForm } from 'react-hook-form';
 import { trpc } from '../utils/trpc';
 
@@ -46,6 +46,8 @@ type EventProps = {
 }
 
 const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
+    const { data: sessionData } = useSession();
+
     const [clicked, setClicked] = React.useState(defaultOpen);
 
     const numPlayers = [...new Set(
@@ -71,29 +73,34 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
             </div>
 
             {clicked &&
-                <table className="m-auto">
-                    <tbody>
-                        {event?.matches.map((match) =>
-                            <tr key={match.id} className={`border-b border-purple-700`}>
-                                <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
-                                    <div className="w-8 mr-2">
-                                        {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
-                                    </div>
-                                    <div className="capitalize">{match.playerA.name}</div>
-                                </td>
-                                <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
+                <>
+                    {sessionData?.user?.isAdmin && event && <div className="mt-3">
+                        <DeleteEvent event={event} />
+                    </div>}
+                    <table className="m-auto">
+                        <tbody>
+                            {event?.matches.map((match) =>
+                                <tr key={match.id} className={`border-b border-purple-700`}>
+                                    <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
+                                        <div className="w-8 mr-2">
+                                            {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
+                                        </div>
+                                        <div className="capitalize">{match.playerA.name}</div>
+                                    </td>
+                                    <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
 
-                                <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
-                                    <div className="w-8 mr-2">
-                                        {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
-                                    </div>
-                                    <div className="capitalize">{match.playerB.name}</div>
-                                </td>
-                                <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                                    <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
+                                        <div className="w-8 mr-2">
+                                            {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
+                                        </div>
+                                        <div className="capitalize">{match.playerB.name}</div>
+                                    </td>
+                                    <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </>
             }
         </>
     );
@@ -148,4 +155,39 @@ const NewEvent: React.FC = () => {
             <AddButton type="submit" />
         </form>
     );
+};
+
+type DeleteEventProps = {
+    event: EventsRouterOutput["list"][number],
+};
+
+type DeleteEventForm = EventsRouterInput["delete"];
+
+const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
+    const utils = trpc.useContext();
+    const { register, handleSubmit } = useForm<DeleteEventForm>({
+        defaultValues: {
+            id: event?.id,
+        }
+    });
+
+    const mutation = trpc.events.delete.useMutation({
+        onSuccess: () => {
+            utils.events.invalidate();
+        },
+        onError: (err) => {
+            console.error(err.message);
+        },
+    });
+
+    const removeEvent = (data: DeleteEventForm) => {
+        mutation.mutate(data);
+    };
+
+    return (
+        <form onSubmit={handleSubmit(removeEvent)}>
+            <input type="hidden" {...register("id")} />
+            <RemoveButton type="submit" />
+        </form>
+    )
 };

@@ -41,4 +41,22 @@ export const eventsRouter = router({
                 event,
             };
         }),
+
+    delete: publicProcedure
+        .input(z.object({
+            id: z.number(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const event = await ctx.prisma.event.delete({
+                where: {
+                    id: input.id,
+                },
+            });
+            return {
+                event,
+            };
+        }),
 });
