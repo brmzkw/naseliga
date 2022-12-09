@@ -72,34 +72,13 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
                 {event && <h4 className="text-bold text-2xl">{event.title}</h4>}
             </div>
 
-            {clicked &&
+            {clicked && event &&
                 <>
-                    {sessionData?.user?.isAdmin && event && <div className="mt-3">
+                    {sessionData?.user?.isAdmin && <div className="mt-3">
                         <DeleteEvent event={event} />
-                    </div>}
-                    <table className="m-auto">
-                        <tbody>
-                            {event?.matches.map((match) =>
-                                <tr key={match.id} className={`border-b border-purple-700`}>
-                                    <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
-                                        <div className="w-8 mr-2">
-                                            {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
-                                        </div>
-                                        <div className="capitalize">{match.playerA.name}</div>
-                                    </td>
-                                    <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
-
-                                    <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
-                                        <div className="w-8 mr-2">
-                                            {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
-                                        </div>
-                                        <div className="capitalize">{match.playerB.name}</div>
-                                    </td>
-                                    <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    </div>
+                    }
+                    <MatchList event={event} />
                 </>
             }
         </>
@@ -191,3 +170,35 @@ const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
         </form>
     )
 };
+
+type MatchListProps = {
+    event: EventsRouterOutput["list"][number],
+};
+
+const MatchList: React.FC<MatchListProps> = ({ event }) => {
+    return (
+        <table className="m-auto">
+            <tbody>
+                {event?.matches.map((match) =>
+                    <tr key={match.id} className={`border-b border-purple-700`}>
+                        <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
+                            <div className="w-8 mr-2">
+                                {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
+                            </div>
+                            <div className="capitalize">{match.playerA.name}</div>
+                        </td>
+                        <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
+
+                        <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
+                            <div className="w-8 mr-2">
+                                {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
+                            </div>
+                            <div className="capitalize">{match.playerB.name}</div>
+                        </td>
+                        <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+    );
+}
