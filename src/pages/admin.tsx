@@ -7,7 +7,7 @@ import { Caveat } from '@next/font/google'
 
 import BaseLayout from "../layouts/base";
 import { countries, CircleFlag } from "react-circle-flags";
-import { inferRouterOutputs } from "@trpc/server";
+import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { leaderboardRouter } from "../server/trpc/router/leaderboard";
 import { useForm } from "react-hook-form";
 import { playersRouter } from "../server/trpc/router/players";
@@ -46,12 +46,6 @@ const PlayersAdmin = () => {
     );
 };
 
-type PlayerFormValues = {
-    country: string;
-    name: string;
-};
-
-
 type PlayersListRowProps = {
     player: inferRouterOutputs<typeof playersRouter>['list'][number]
 };
@@ -59,7 +53,7 @@ type PlayersListRowProps = {
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
-    const { register, handleSubmit } = useForm<PlayerFormValues>({
+    const { register, handleSubmit } = useForm<Omit<inferRouterInputs<typeof playersRouter>['edit'], "id">>({
         defaultValues: {
             country: player.country.toLocaleLowerCase(),
             name: player.name,
@@ -93,7 +87,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
         }
     };
 
-    const editPlayer = ((data: PlayerFormValues) => {
+    const editPlayer = ((data: Omit<inferRouterInputs<typeof playersRouter>['edit'], "id">) => {
         editPlayerMutation.mutate({ id: player.id, ...data });
     });
 
@@ -147,7 +141,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
 
 const NewPlayer: React.FC = () => {
-    const { register, handleSubmit, reset } = useForm<PlayerFormValues>();
+    const { register, handleSubmit, reset } = useForm<inferRouterInputs<typeof playersRouter>['create']>();
 
     const utils = trpc.useContext();
     const mutation = trpc.players.create.useMutation({
@@ -161,7 +155,7 @@ const NewPlayer: React.FC = () => {
 
     });
 
-    const onSubmit = ((data: PlayerFormValues) => {
+    const onSubmit = ((data: inferRouterInputs<typeof playersRouter>['create']) => {
         mutation.mutate(data);
     });
 
