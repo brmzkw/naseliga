@@ -140,4 +140,28 @@ export const naseligaRouter = router({
                 player,
             };
         }),
+
+    editPlayer: publicProcedure
+        .input(z.object({
+            id: z.number(),
+            name: z.string(),
+            country: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const player = await ctx.prisma.player.update({
+                where: {
+                    id: input.id,
+                },
+                data: {
+                    name: input.name,
+                    country: input.country,
+                },
+            });
+            return {
+                player,
+            };
+        }),
 });
