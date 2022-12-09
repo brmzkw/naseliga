@@ -1,7 +1,11 @@
 import { Prisma } from '@prisma/client'
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { z } from 'zod';
 
 import { router, publicProcedure } from "../trpc";
+
+export type PlayersRouterInput = inferRouterInputs<typeof playersRouter>;
+export type PlayersRouterOutput = inferRouterOutputs<typeof playersRouter>;
 
 const playerData = Prisma.validator<Prisma.PlayerArgs>()({
     select: {

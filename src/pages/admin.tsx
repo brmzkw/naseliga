@@ -7,10 +7,8 @@ import { Caveat } from '@next/font/google'
 
 import BaseLayout from "../layouts/base";
 import { countries, CircleFlag } from "react-circle-flags";
-import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import { leaderboardRouter } from "../server/trpc/router/leaderboard";
 import { useForm } from "react-hook-form";
-import { playersRouter } from "../server/trpc/router/players";
+import { type PlayersRouterInput, type PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 
 const font = Caveat()
@@ -47,13 +45,13 @@ const PlayersAdmin = () => {
 };
 
 type PlayersListRowProps = {
-    player: inferRouterOutputs<typeof playersRouter>['list'][number]
+    player: PlayersRouterOutput['list'][number]
 };
 
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
-    const { register, handleSubmit } = useForm<Omit<inferRouterInputs<typeof playersRouter>['edit'], "id">>({
+    const { register, handleSubmit } = useForm<Omit<PlayersRouterInput['edit'], "id">>({
         defaultValues: {
             country: player.country.toLocaleLowerCase(),
             name: player.name,
@@ -87,7 +85,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
         }
     };
 
-    const editPlayer = ((data: Omit<inferRouterInputs<typeof playersRouter>['edit'], "id">) => {
+    const editPlayer = ((data: Omit<PlayersRouterInput['edit'], "id">) => {
         editPlayerMutation.mutate({ id: player.id, ...data });
     });
 
@@ -141,7 +139,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
 
 const NewPlayer: React.FC = () => {
-    const { register, handleSubmit, reset } = useForm<inferRouterInputs<typeof playersRouter>['create']>();
+    const { register, handleSubmit, reset } = useForm<PlayersRouterInput['create']>();
 
     const utils = trpc.useContext();
     const mutation = trpc.players.create.useMutation({
@@ -155,7 +153,7 @@ const NewPlayer: React.FC = () => {
 
     });
 
-    const onSubmit = ((data: inferRouterInputs<typeof playersRouter>['create']) => {
+    const onSubmit = ((data: PlayersRouterInput['create']) => {
         mutation.mutate(data);
     });
 
