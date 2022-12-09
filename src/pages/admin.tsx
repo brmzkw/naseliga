@@ -8,7 +8,7 @@ import { Caveat } from '@next/font/google'
 import BaseLayout from "../layouts/base";
 import { countries, CircleFlag } from "react-circle-flags";
 import { useForm } from "react-hook-form";
-import { type PlayersRouterInput, type PlayersRouterOutput } from "../server/trpc/router/players";
+import { PlayersRouterInput, type PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 
 const font = Caveat()
@@ -51,7 +51,7 @@ type PlayersListRowProps = {
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
-    const { register, handleSubmit } = useForm<Omit<PlayersRouterInput['edit'], "id">>({
+    const { register, handleSubmit } = useForm<PlayerForm>({
         defaultValues: {
             country: player.country.toLocaleLowerCase(),
             name: player.name,
@@ -85,7 +85,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
         }
     };
 
-    const editPlayer = ((data: Omit<PlayersRouterInput['edit'], "id">) => {
+    const editPlayer = ((data: PlayerForm) => {
         editPlayerMutation.mutate({ id: player.id, ...data });
     });
 
@@ -137,9 +137,10 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     );
 };
 
+type PlayerForm = Omit<PlayersRouterInput["create"], "id">;
 
 const NewPlayer: React.FC = () => {
-    const { register, handleSubmit, reset } = useForm<PlayersRouterInput['create']>();
+    const { register, handleSubmit, reset } = useForm<PlayerForm>();
 
     const utils = trpc.useContext();
     const mutation = trpc.players.create.useMutation({
@@ -153,7 +154,7 @@ const NewPlayer: React.FC = () => {
 
     });
 
-    const onSubmit = ((data: PlayersRouterInput['create']) => {
+    const onSubmit = ((data: PlayerForm) => {
         mutation.mutate(data);
     });
 

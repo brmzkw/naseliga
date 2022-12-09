@@ -99,10 +99,10 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
     );
 };
 
-type NewEventForm = {
-    title: string,
+// Same as EventsRouterInput["create"] but without id, and date as string
+type NewEventForm = Omit<Omit<EventsRouterInput["create"], "id">, "date"> & {
     date: string,
-}
+};
 
 const NewEvent: React.FC = () => {
     const utils = trpc.useContext();
