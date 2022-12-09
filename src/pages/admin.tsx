@@ -72,7 +72,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
     const removeMutation = trpc.players.delete.useMutation({
         onSuccess: () => {
-            utils.players.list.invalidate();
+            utils.players.invalidate();
         },
         onError: (err) => {
             console.error(err.message);
@@ -81,7 +81,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
     const editMutation = trpc.players.edit.useMutation({
         onSuccess: () => {
-            utils.players.list.invalidate();
+            utils.players.invalidate();
             setEdit(false);
         },
         onError: (err) => {
@@ -169,7 +169,7 @@ const NewPlayer: React.FC = () => {
     const utils = trpc.useContext();
     const mutation = trpc.players.create.useMutation({
         onSuccess: () => {
-            utils.players.list.invalidate();
+            utils.players.invalidate();
             reset();
         },
         onError: (err) => {
