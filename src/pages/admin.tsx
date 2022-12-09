@@ -13,14 +13,13 @@ import { useForm } from "react-hook-form";
 import { playersRouter } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 
-
 const font = Caveat()
 
 const AdminPage: NextPage = () => {
     return (
         <BaseLayout>
             <div className="m-3">
-                <PlayersList />
+                <PlayersAdmin />
             </div>
         </BaseLayout>
     );
@@ -28,7 +27,7 @@ const AdminPage: NextPage = () => {
 
 export default AdminPage;
 
-const PlayersList = () => {
+const PlayersAdmin = () => {
     const playersQuery = trpc.players.list.useQuery();
 
     return (
@@ -43,7 +42,7 @@ const PlayersList = () => {
 
             <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
             {playersQuery.data && <NewPlayer />}
-        </div >
+        </div>
     );
 };
 
@@ -139,7 +138,6 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
                     <>
                         <EditButton onClick={() => setEdit(true)} />
                         <RemoveButton onClick={removePlayer} />
-
                     </>
                 }
             </div>
