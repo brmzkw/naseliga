@@ -99,12 +99,17 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
     );
 };
 
+type NewEventForm = {
+    title: string,
+    date: string,
+}
+
 const NewEvent: React.FC = () => {
     const utils = trpc.useContext();
 
-    const { register, handleSubmit, reset } = useForm<Omit<EventsRouterInput['create'], "id">>({
+    const { register, handleSubmit, reset } = useForm<NewEventForm>({
         defaultValues: {
-            // date: new Date().toISOString().split('T')[0],
+            date: new Date().toISOString().split('T')[0],
         },
     });
 
@@ -117,10 +122,10 @@ const NewEvent: React.FC = () => {
         },
     });
 
-    const createNewEvent = (data: Omit<EventsRouterInput['create'], "id">) => {
+    const createNewEvent = (data: NewEventForm) => {
         mutation.mutate({
             ...data,
-            date: new Date(),
+            date: new Date(data.date),
         });
         reset();
     };
