@@ -1,7 +1,7 @@
 import React from "react";
 
 import { CircleFlag } from 'react-circle-flags'
-import type { PlayerWithScore } from "../server/trpc/router/naseliga";
+import type { PlayerWithScore } from "../server/trpc/router/leaderboard";
 
 
 type LeaderboardProps = {

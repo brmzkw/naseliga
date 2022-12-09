@@ -8,8 +8,9 @@ import { Caveat } from '@next/font/google'
 import BaseLayout from "../layouts/base";
 import { countries, CircleFlag } from "react-circle-flags";
 import { inferRouterOutputs } from "@trpc/server";
-import { naseligaRouter } from "../server/trpc/router/naseliga";
+import { leaderboardRouter } from "../server/trpc/router/leaderboard";
 import { useForm } from "react-hook-form";
+import { playersRouter } from "../server/trpc/router/players";
 
 
 const font = Caveat()
@@ -27,7 +28,7 @@ const AdminPage: NextPage = () => {
 export default AdminPage;
 
 const PlayersList = () => {
-    const playersQuery = trpc.naseliga.getPlayers.useQuery();
+    const playersQuery = trpc.players.getPlayers.useQuery();
 
     return (
         <div>
@@ -54,7 +55,7 @@ type PlayerFormValues = {
 
 
 type PlayersListRowProps = {
-    player: inferRouterOutputs<typeof naseligaRouter>['getPlayers'][number]
+    player: inferRouterOutputs<typeof playersRouter>['getPlayers'][number]
 };
 
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
@@ -69,18 +70,18 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
     const utils = trpc.useContext();
 
-    const removeMutation = trpc.naseliga.removePlayer.useMutation({
+    const removeMutation = trpc.players.removePlayer.useMutation({
         onSuccess: () => {
-            utils.naseliga.getPlayers.invalidate();
+            utils.players.getPlayers.invalidate();
         },
         onError: (err) => {
             console.error(err.message);
         },
     });
 
-    const editMutation = trpc.naseliga.editPlayer.useMutation({
+    const editMutation = trpc.players.editPlayer.useMutation({
         onSuccess: () => {
-            utils.naseliga.getPlayers.invalidate();
+            utils.players.getPlayers.invalidate();
             setEdit(false);
         },
         onError: (err) => {
@@ -166,9 +167,9 @@ const NewPlayer: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<PlayerFormValues>();
 
     const utils = trpc.useContext();
-    const mutation = trpc.naseliga.addPlayer.useMutation({
+    const mutation = trpc.players.addPlayer.useMutation({
         onSuccess: () => {
-            utils.naseliga.getPlayers.invalidate();
+            utils.players.getPlayers.invalidate();
             reset();
         },
         onError: (err) => {

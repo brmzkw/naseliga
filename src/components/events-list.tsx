@@ -1,11 +1,11 @@
 import type { inferRouterOutputs } from '@trpc/server';
-import type { naseligaRouter } from "../server/trpc/router/naseliga";
+import type { leaderboardRouter } from "../server/trpc/router/leaderboard";
 
 import { CircleFlag } from 'react-circle-flags'
 import React from 'react';
 
 type EventsListProps = {
-    events?: inferRouterOutputs<typeof naseligaRouter>['getEvents']
+    events?: inferRouterOutputs<typeof leaderboardRouter>['getEvents']
 }
 
 const EventsList: React.FC<EventsListProps> = ({ events }) => {

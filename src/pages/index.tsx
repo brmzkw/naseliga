@@ -13,8 +13,8 @@ import BaseLayout from "../layouts/base";
 const font = Caveat()
 
 const HomePage: NextPage = () => {
-  const leaderboardQuery = trpc.naseliga.getLeaderBoard.useQuery();
-  const eventsQuery = trpc.naseliga.getEvents.useQuery();
+  const leaderboardQuery = trpc.leaderboard.getLeaderBoard.useQuery();
+  const eventsQuery = trpc.events.getEvents.useQuery();
 
   return (
     <BaseLayout>
