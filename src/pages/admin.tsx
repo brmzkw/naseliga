@@ -28,7 +28,7 @@ const AdminPage: NextPage = () => {
 export default AdminPage;
 
 const PlayersList = () => {
-    const playersQuery = trpc.players.getPlayers.useQuery();
+    const playersQuery = trpc.players.list.useQuery();
 
     return (
         <div>
@@ -55,7 +55,7 @@ type PlayerFormValues = {
 
 
 type PlayersListRowProps = {
-    player: inferRouterOutputs<typeof playersRouter>['getPlayers'][number]
+    player: inferRouterOutputs<typeof playersRouter>['list'][number]
 };
 
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
@@ -70,18 +70,18 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
     const utils = trpc.useContext();
 
-    const removeMutation = trpc.players.removePlayer.useMutation({
+    const removeMutation = trpc.players.delete.useMutation({
         onSuccess: () => {
-            utils.players.getPlayers.invalidate();
+            utils.players.list.invalidate();
         },
         onError: (err) => {
             console.error(err.message);
         },
     });
 
-    const editMutation = trpc.players.editPlayer.useMutation({
+    const editMutation = trpc.players.edit.useMutation({
         onSuccess: () => {
-            utils.players.getPlayers.invalidate();
+            utils.players.list.invalidate();
             setEdit(false);
         },
         onError: (err) => {
@@ -167,9 +167,9 @@ const NewPlayer: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<PlayerFormValues>();
 
     const utils = trpc.useContext();
-    const mutation = trpc.players.addPlayer.useMutation({
+    const mutation = trpc.players.create.useMutation({
         onSuccess: () => {
-            utils.players.getPlayers.invalidate();
+            utils.players.list.invalidate();
             reset();
         },
         onError: (err) => {

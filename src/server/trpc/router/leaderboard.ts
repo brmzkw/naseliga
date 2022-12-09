@@ -15,7 +15,7 @@ type Player = Prisma.PlayerGetPayload<typeof playerData>
 export type PlayerWithScore = Player & { score: number }
 
 export const leaderboardRouter = router({
-    getLeaderBoard: publicProcedure
+    get: publicProcedure
         .input(z.object({
             after: z.date()
         }).default(() => {

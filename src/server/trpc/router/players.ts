@@ -12,23 +12,7 @@ const playerData = Prisma.validator<Prisma.PlayerArgs>()({
 });
 
 export const playersRouter = router({
-    getEvents: publicProcedure.query(({ ctx }) => {
-        return ctx.prisma.event.findMany({
-            include: {
-                matches: {
-                    include: {
-                        playerA: true,
-                        playerB: true,
-                    }
-                },
-            },
-            orderBy: {
-                id: 'desc',
-            },
-        });
-    }),
-
-    getPlayers: publicProcedure.query(({ ctx }) => {
+    list: publicProcedure.query(({ ctx }) => {
         return ctx.prisma.player.findMany({
             select: playerData.select,
             orderBy: {
@@ -37,7 +21,7 @@ export const playersRouter = router({
         });
     }),
 
-    addPlayer: publicProcedure
+    create: publicProcedure
         .input(z.object({
             name: z.string(),
             country: z.string(),
@@ -57,7 +41,7 @@ export const playersRouter = router({
             };
         }),
 
-    removePlayer: publicProcedure
+    delete: publicProcedure
         .input(z.object({
             id: z.number(),
         }))
@@ -75,7 +59,7 @@ export const playersRouter = router({
             };
         }),
 
-    editPlayer: publicProcedure
+    edit: publicProcedure
         .input(z.object({
             id: z.number(),
             name: z.string(),
