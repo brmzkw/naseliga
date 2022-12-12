@@ -13,7 +13,8 @@ const PlayerSelectInput = React.forwardRef<any, Props>((props, ref) => {
     }));
 
     return (
-        <Select ref={ref} options={options} {...props} />
+        <Select ref={ref} options={options} noOptionsMessage={() => "Loading..."}
+            {...props} />
     );
 });
 
