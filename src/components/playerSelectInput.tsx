@@ -17,4 +17,6 @@ const PlayerSelectInput = React.forwardRef<any, Props>((props, ref) => {
     );
 });
 
+PlayerSelectInput.displayName = "PlayerSelectInput";
+
 export default PlayerSelectInput;
