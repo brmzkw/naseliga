@@ -190,29 +190,6 @@ type NewPlayerForm = {
 }
 
 const MatchList: React.FC<MatchListProps> = ({ event }) => {
-    const { control, register, handleSubmit, reset } = useForm<NewPlayerForm>();
-    const utils = trpc.useContext();
-
-    const mutation = trpc.events.createMatch.useMutation({
-        onSuccess: () => {
-            utils.events.invalidate();
-            reset();
-        },
-        onError: (err) => {
-            console.error('Error while creating match', err);
-        },
-    });
-
-    const onSubmit = (data: NewPlayerForm) => {
-        mutation.mutate({
-            eventId: event.id,
-            playerAId: parseInt(data.playerA.value, 10),
-            scoreA: parseInt(data.scoreA, 10),
-            playerBId: parseInt(data.playerB.value, 10),
-            scoreB: parseInt(data.scoreB, 10),
-        });
-    };
-
     return (
         <div>
             <table className="m-auto">
@@ -239,10 +216,42 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                 </tbody>
             </table>
 
-            <div className="flex flex-col gap-1 items-center mt-3">
-                <h4 className="font-bold text-xl">New match</h4>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex m-4 gap-1">
+            <NewMatch event={event} />
+        </div>
+    );
+};
+
+type NewMatchProps = MatchListProps;
+
+const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
+    const { control, register, handleSubmit, reset } = useForm<NewPlayerForm>();
+    const utils = trpc.useContext();
+
+    const mutation = trpc.events.createMatch.useMutation({
+        onSuccess: () => {
+            utils.events.invalidate();
+            reset();
+        },
+        onError: (err) => {
+            console.error('Error while creating match', err);
+        },
+    });
+
+    const onSubmit = (data: NewPlayerForm) => {
+        mutation.mutate({
+            eventId: event.id,
+            playerAId: parseInt(data.playerA.value, 10),
+            scoreA: parseInt(data.scoreA, 10),
+            playerBId: parseInt(data.playerB.value, 10),
+            scoreB: parseInt(data.scoreB, 10),
+        });
+    };
+    return (
+        <div className="gap-1 mt-7 p-4">
+            <h4 className="font-bold text-xl text-center ">New match</h4>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-stretch">
+                <div className="mt-2 flex gap-4">
+                    <div className="flex-1 flex flex-col gap-2">
                         <Controller
                             name="playerA"
                             control={control}
@@ -263,7 +272,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                             {...register("scoreA")}
                         />
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex-1 flex flex-col gap-2">
                         <Controller
                             name="playerB"
                             control={control}
@@ -283,11 +292,11 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                             {...register("scoreB")}
                         />
                     </div>
-                    <div>
-                        <AddButton type="submit" />
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div className="">
+                    <AddButton type="submit" />
+                </div>
+            </form>
         </div>
     );
 };
