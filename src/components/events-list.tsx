@@ -3,11 +3,12 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import type { inferRouterOutputs } from '@trpc/server';
 import { CircleFlag } from 'react-circle-flags'
+import { useForm, Controller } from 'react-hook-form';
 
 import { eventsRouter, EventsRouterOutput, type EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
-import { useForm } from 'react-hook-form';
 import { trpc } from '../utils/trpc';
+import PlayerSelectInput from './playerSelectInput';
 
 type EventsListProps = {
     events?: inferRouterOutputs<typeof eventsRouter>['list']
@@ -175,30 +176,124 @@ type MatchListProps = {
     event: EventsRouterOutput["list"][number],
 };
 
-const MatchList: React.FC<MatchListProps> = ({ event }) => {
-    return (
-        <table className="m-auto">
-            <tbody>
-                {event?.matches.map((match) =>
-                    <tr key={match.id} className={`border-b border-purple-700`}>
-                        <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
-                            <div className="w-8 mr-2">
-                                {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
-                            </div>
-                            <div className="capitalize">{match.playerA.name}</div>
-                        </td>
-                        <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
-
-                        <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
-                            <div className="w-8 mr-2">
-                                {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
-                            </div>
-                            <div className="capitalize">{match.playerB.name}</div>
-                        </td>
-                        <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>
-    );
+type NewPlayerForm = {
+    scoreA: string;
+    scoreB: string;
+    playerA: {
+        label: string;
+        value: string;
+    },
+    playerB: {
+        label: string;
+        value: string;
+    },
 }
+
+const MatchList: React.FC<MatchListProps> = ({ event }) => {
+    const { control, register, handleSubmit, reset } = useForm<NewPlayerForm>();
+    const utils = trpc.useContext();
+
+    const query = trpc.players.list.useQuery();
+    const options = query.data?.map((player) => ({
+        value: player.id.toString(),
+        label: player.name,
+    }));
+
+    const mutation = trpc.events.createMatch.useMutation({
+        onSuccess: () => {
+            utils.events.invalidate();
+            reset();
+        },
+        onError: (err) => {
+            console.error('Error while creating match', err);
+        },
+    });
+
+    const onSubmit = (data: NewPlayerForm) => {
+        mutation.mutate({
+            eventId: event.id,
+            playerAId: parseInt(data.playerA.value, 10),
+            scoreA: parseInt(data.scoreA, 10),
+            playerBId: parseInt(data.playerB.value, 10),
+            scoreB: parseInt(data.scoreB, 10),
+        });
+    };
+
+    return (
+        <div>
+            <table className="m-auto">
+                <tbody>
+                    {event.matches.map((match) =>
+                        <tr key={match.id} className={`border-b border-purple-700`}>
+                            <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
+                                <div className="w-8 mr-2">
+                                    {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
+                                </div>
+                                <div className="capitalize">{match.playerA.name}</div>
+                            </td>
+                            <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
+
+                            <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
+                                <div className="w-8 mr-2">
+                                    {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
+                                </div>
+                                <div className="capitalize">{match.playerB.name}</div>
+                            </td>
+                            <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+
+            <div className="flex flex-col gap-1 items-center mt-3">
+                <h4 className="font-bold text-xl">New match</h4>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex m-4 gap-1">
+                        <Controller
+                            name="playerA"
+                            control={control}
+                            render={({ field }) => <PlayerSelectInput
+                                {...field}
+                                placeholder="First player"
+                                required
+                            />
+                            }
+                        />
+
+                        <input
+                            className="border border-gray-300 p-2"
+                            type="number"
+                            min="0"
+                            placeholder="First score"
+                            required
+                            {...register("scoreA")}
+                        />
+                    </div>
+                    <div className="flex gap-1">
+                        <Controller
+                            name="playerB"
+                            control={control}
+                            render={({ field }) => <PlayerSelectInput
+                                {...field}
+                                placeholder="Second player"
+                                required
+                            />
+                            }
+                        />
+                        <input
+                            className="border border-gray-300 p-2"
+                            type="number"
+                            min="0"
+                            placeholder="Second score"
+                            required
+                            {...register("scoreB")}
+                        />
+                    </div>
+                    <div>
+                        <AddButton type="submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};

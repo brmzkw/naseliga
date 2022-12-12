@@ -59,4 +59,60 @@ export const eventsRouter = router({
                 event,
             };
         }),
+
+    createMatch: publicProcedure
+        .input(z.object({
+            eventId: z.number(),
+            playerAId: z.number(),
+            scoreA: z.number(),
+            playerBId: z.number(),
+            scoreB: z.number(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const match = await ctx.prisma.match.create({
+                data: {
+                    event: {
+                        connect: {
+                            id: input.eventId,
+                        },
+                    },
+                    playerA: {
+                        connect: {
+                            id: input.playerAId,
+                        },
+                    },
+                    scoreA: input.scoreA,
+                    playerB: {
+                        connect: {
+                            id: input.playerBId,
+                        },
+                    },
+                    scoreB: input.scoreB,
+                },
+            });
+            return {
+                match,
+            };
+        }),
+
+    deleteMatch: publicProcedure
+        .input(z.object({
+            id: z.number(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            if (!ctx.session?.user?.isAdmin) {
+                throw new Error('Not authorized');
+            }
+            const match = await ctx.prisma.match.delete({
+                where: {
+                    id: input.id,
+                },
+            });
+            return {
+                match,
+            };
+        }),
 });

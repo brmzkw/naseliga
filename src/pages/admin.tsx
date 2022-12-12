@@ -137,7 +137,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     );
 };
 
-type PlayerForm = Omit<PlayersRouterInput["create"], "id">;
+type PlayerForm = PlayersRouterInput["create"];
 
 const NewPlayer: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<PlayerForm>();
