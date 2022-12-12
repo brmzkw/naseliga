@@ -193,12 +193,6 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
     const { control, register, handleSubmit, reset } = useForm<NewPlayerForm>();
     const utils = trpc.useContext();
 
-    const query = trpc.players.list.useQuery();
-    const options = query.data?.map((player) => ({
-        value: player.id.toString(),
-        label: player.name,
-    }));
-
     const mutation = trpc.events.createMatch.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
