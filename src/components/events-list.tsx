@@ -177,6 +177,7 @@ type MatchListProps = {
 };
 
 const MatchList: React.FC<MatchListProps> = ({ event }) => {
+    const { data: sessionData } = useSession();
     return (
         <div>
             <table className="m-auto">
@@ -203,9 +204,11 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                 </tbody>
             </table>
 
-            <div className="mt-4">
-                <NewMatch event={event} />
-            </div>
+            {sessionData?.user?.isAdmin &&
+                <div className="mt-4">
+                    <NewMatch event={event} />
+                </div>
+            }
         </div>
     );
 };
