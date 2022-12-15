@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import type { inferRouterOutputs } from '@trpc/server';
 import { CircleFlag } from 'react-circle-flags'
 import { useForm, Controller } from 'react-hook-form';
+import Select, { ActionMeta, SingleValue } from 'react-select';
 
 import { eventsRouter, EventsRouterOutput, type EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
@@ -176,19 +177,6 @@ type MatchListProps = {
     event: EventsRouterOutput["list"][number],
 };
 
-type NewPlayerForm = {
-    scoreA: string;
-    scoreB: string;
-    playerA: {
-        label: string;
-        value: string;
-    },
-    playerB: {
-        label: string;
-        value: string;
-    },
-}
-
 const MatchList: React.FC<MatchListProps> = ({ event }) => {
     return (
         <div>
@@ -216,55 +204,85 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                 </tbody>
             </table>
 
-            <NewMatch event={event} />
+            <div className="mt-4">
+                <NewMatch event={event} />
+            </div>
         </div>
     );
 };
 
 type NewMatchProps = MatchListProps;
 
+type NewMatchForm = {
+    scoreA: string;
+    scoreB: string;
+    playerA: {
+        id: number;
+        name: string;
+        country: string;
+    },
+    playerB: {
+        id: number;
+        name: string;
+        country: string;
+    },
+};
+
 const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
-    const { control, register, handleSubmit, reset } = useForm<NewPlayerForm>();
+    const { control, register, handleSubmit, watch } = useForm<NewMatchForm>({
+        defaultValues: {
+            scoreA: "0",
+            scoreB: "0",
+        }
+    });
+
     const utils = trpc.useContext();
 
     const mutation = trpc.events.createMatch.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
-            reset();
         },
         onError: (err) => {
             console.error('Error while creating match', err);
         },
     });
 
-    const onSubmit = (data: NewPlayerForm) => {
+    const onSubmit = (data: NewMatchForm) => {
         mutation.mutate({
             eventId: event.id,
-            playerAId: parseInt(data.playerA.value, 10),
+            playerAId: data.playerA.id,
             scoreA: parseInt(data.scoreA, 10),
-            playerBId: parseInt(data.playerB.value, 10),
+            playerBId: data.playerB.id,
             scoreB: parseInt(data.scoreB, 10),
         });
     };
+
     return (
-        <div className="gap-1 mt-7 p-4">
-            <h4 className="font-bold text-xl text-center ">New match</h4>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-stretch">
-                <div className="mt-2 flex gap-4">
-                    <div className="flex-1 flex flex-col gap-2">
+        <>
+            <hr />
+            <h4 className="text-xl text-center text-bold">Add a new match</h4>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex justify-around pt-4 pb-4">
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="w-24 h-24 flex justify-center items-center">
+                        {<CircleFlag countryCode={watch('playerA')?.country.toLowerCase()} />}
+                    </div>
+                    <div>
                         <Controller
                             name="playerA"
                             control={control}
-                            render={({ field }) => <PlayerSelectInput
-                                {...field}
-                                placeholder="First player"
-                                required
-                            />
+                            render={
+                                ({ field }) =>
+                                    <PlayerSelectInput
+                                        {...field}
+                                        placeholder="First player"
+                                        required
+                                    />
                             }
                         />
-
+                    </div>
+                    <div>
                         <input
-                            className="border border-gray-300 p-2"
+                            className="border border-gray-300 p-2 w-full"
                             type="number"
                             min="0"
                             placeholder="First score"
@@ -272,19 +290,31 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
                             {...register("scoreA")}
                         />
                     </div>
-                    <div className="flex-1 flex flex-col gap-2">
+                </div>
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <AddButton type="submit" />
+                </div>
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="w-24 h-24 flex justify-center items-center">
+                        {<CircleFlag countryCode={watch('playerB')?.country.toLowerCase()} />}
+                    </div>
+                    <div>
                         <Controller
                             name="playerB"
                             control={control}
-                            render={({ field }) => <PlayerSelectInput
-                                {...field}
-                                placeholder="Second player"
-                                required
-                            />
+                            render={
+                                ({ field }) =>
+                                    <PlayerSelectInput
+                                        {...field}
+                                        placeholder="Second player"
+                                        required
+                                    />
                             }
                         />
+                    </div>
+                    <div>
                         <input
-                            className="border border-gray-300 p-2"
+                            className="border border-gray-300 p-2 w-full"
                             type="number"
                             min="0"
                             placeholder="Second score"
@@ -293,10 +323,8 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
                         />
                     </div>
                 </div>
-                <div className="">
-                    <AddButton type="submit" />
-                </div>
             </form>
-        </div>
+            <hr />
+        </>
     );
 };
