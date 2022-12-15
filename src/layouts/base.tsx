@@ -31,12 +31,14 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
                     </div>
 
                     <button onClick={sessionData ? () => signOut() : () => signIn("github")}>
-                        <img
-                            className="rounded-full h-10 w-10"
-                            src={(sessionData?.user?.image && sessionData.user.image) || "/GitHub-Mark/PNG/GitHub-Mark-64px.png"}
-                            title={sessionData ? "Logout" : "Login with GitHub"}
-                            alt={sessionData ? "Logout" : "Login with GitHub"}
-                        />
+                        <picture>
+                            <img
+                                className="rounded-full h-10 w-10"
+                                src={(sessionData?.user?.image && sessionData.user.image) || "/GitHub-Mark/PNG/GitHub-Mark-64px.png"}
+                                title={sessionData ? "Logout" : "Login with GitHub"}
+                                alt={sessionData ? "Logout" : "Login with GitHub"}
+                            />
+                        </picture>
                     </button>
                 </div>
 
