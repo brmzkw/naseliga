@@ -5,12 +5,9 @@ import { type NextPage } from "next";
 import EventsList from "../components/events-list";
 import Leaderboard from "../components/leaderboard";
 import { trpc } from "../utils/trpc";
-import { Caveat } from '@next/font/google'
 
 import BaseLayout from "../layouts/base";
 
-
-const font = Caveat()
 
 const HomePage: NextPage = () => {
   const leaderboardQuery = trpc.leaderboard.get.useQuery();

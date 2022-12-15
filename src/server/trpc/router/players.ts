@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { z } from 'zod';
 
 import { router, publicProcedure } from "../trpc";

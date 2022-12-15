@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { CircleFlag } from "react-circle-flags";
-import Select, { Props } from 'react-select';
+import Select, { type Props } from 'react-select';
 
 import { trpc } from '../utils/trpc';
 
@@ -33,5 +33,7 @@ const PlayerSelectInput = React.forwardRef<any, Props>(({ ...props }, ref) => {
         />
     );
 });
+
+PlayerSelectInput.displayName = 'PlayerSelectInput';
 
 export default PlayerSelectInput;

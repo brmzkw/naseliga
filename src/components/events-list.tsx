@@ -4,9 +4,8 @@ import { useSession } from 'next-auth/react';
 import type { inferRouterOutputs } from '@trpc/server';
 import { CircleFlag } from 'react-circle-flags'
 import { useForm, Controller } from 'react-hook-form';
-import Select, { ActionMeta, SingleValue } from 'react-select';
 
-import { eventsRouter, EventsRouterOutput, type EventsRouterInput } from '../server/trpc/router/events';
+import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
 import PlayerSelectInput from './playerSelectInput';

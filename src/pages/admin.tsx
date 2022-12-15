@@ -3,15 +3,12 @@ import React from "react";
 import { type NextPage } from "next";
 
 import { trpc } from "../utils/trpc";
-import { Caveat } from '@next/font/google'
 
 import BaseLayout from "../layouts/base";
 import { countries, CircleFlag } from "react-circle-flags";
 import { useForm } from "react-hook-form";
-import { PlayersRouterInput, type PlayersRouterOutput } from "../server/trpc/router/players";
+import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
-
-const font = Caveat()
 
 const AdminPage: NextPage = () => {
     return (

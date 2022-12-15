@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { type PropsWithChildren } from "react";
 
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -35,6 +35,7 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
                             className="rounded-full h-10 w-10"
                             src={(sessionData?.user?.image && sessionData.user.image) || "/GitHub-Mark/PNG/GitHub-Mark-64px.png"}
                             title={sessionData ? "Logout" : "Login with GitHub"}
+                            alt={sessionData ? "Logout" : "Login with GitHub"}
                         />
                     </button>
                 </div>
