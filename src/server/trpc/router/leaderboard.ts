@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma, type PrismaClient } from '@prisma/client'
 import { z } from 'zod';
 
 import { router, publicProcedure } from "../trpc";
@@ -79,7 +79,7 @@ export const leaderboardRouter = router({
         }),
 
     update: publicProcedure
-        .mutation(async ({ ctx, input }) => {
+        .mutation(async ({ ctx }) => {
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
