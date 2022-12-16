@@ -265,7 +265,7 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
             <h4 className="text-xl text-center text-bold">Add a new match</h4>
             <form onSubmit={handleSubmit(onSubmit)} className="flex justify-around pt-4 pb-4">
                 <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="w-24 h-24 flex justify-center items-center">
+                    <div className="w-24 h-24">
                         {<CircleFlag countryCode={watch('playerA')?.country.toLowerCase()} />}
                     </div>
                     <div>
@@ -297,7 +297,7 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
                     <AddButton type="submit" />
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="w-24 h-24 flex justify-center items-center">
+                    <div className="w-24 h-24">
                         {<CircleFlag countryCode={watch('playerB')?.country.toLowerCase()} />}
                     </div>
                     <div>
