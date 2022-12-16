@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
-import PlayerSelectInput from './playerSelectInput';
+import PlayerSelectInput from './player-select-input';
 
 type EventsListProps = {
     events?: inferRouterOutputs<typeof eventsRouter>['list']

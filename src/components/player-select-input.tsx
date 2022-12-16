@@ -5,7 +5,9 @@ import Select, { type Props } from 'react-select';
 
 import { trpc } from '../utils/trpc';
 
-
+/*
+* This component is a wrapper around react-select that fetches the list of players.
+*/
 const PlayerSelectInput = React.forwardRef<any, Props>(({ ...props }, ref) => {
     const query = trpc.players.list.useQuery();
     type PlayerType = NonNullable<typeof query.data>[number];
