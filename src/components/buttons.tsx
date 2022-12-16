@@ -1,8 +1,8 @@
 type ButtonProps = {
     text?: string;
-};
+} & React.ComponentPropsWithoutRef<'button'>;
 
-export const SubmitButton: React.FC<ButtonProps> = ({ text, ...props }) => {
+export const SubmitButton = ({ text, ...props }: ButtonProps) => {
     return (
         <button type="submit" className="bg-green-700 rounded-md text-white text-center flex items-center p-1 pr-2" {...props}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -13,7 +13,7 @@ export const SubmitButton: React.FC<ButtonProps> = ({ text, ...props }) => {
     );
 };
 
-export const EditButton: React.FC<ButtonProps> = ({ text, ...props }) => {
+export const EditButton = ({ text, ...props }: ButtonProps) => {
     return (
         <button type="button" className="bg-slate-700 rounded-md text-white text-center flex items-center p-1 pr-2" {...props}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
@@ -24,7 +24,7 @@ export const EditButton: React.FC<ButtonProps> = ({ text, ...props }) => {
     );
 }
 
-export const RemoveButton: React.FC<ButtonProps> = ({ text, ...props }) => {
+export const RemoveButton = ({ text, ...props }: ButtonProps) => {
     return (
         <button type="button" className="bg-red-700 rounded-md text-white text-center flex items-center p-1 pr-2" {...props}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
@@ -35,7 +35,9 @@ export const RemoveButton: React.FC<ButtonProps> = ({ text, ...props }) => {
     );
 };
 
-export const AddButton: React.FC<ButtonProps> = ({ text, ...props }) => {
+
+
+export const AddButton = ({ text, ...props }: ButtonProps) => {
     return (
         <button type="button" className="bg-green-800 rounded-md text-white flex m-1 items-center p-2" {...props}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
@@ -46,7 +48,7 @@ export const AddButton: React.FC<ButtonProps> = ({ text, ...props }) => {
     );
 };
 
-export const UpdateButton: React.FC<ButtonProps> = ({ text, ...props }) => {
+export const UpdateButton = ({ text, ...props }: ButtonProps) => {
     return (
         <button type="button" className="bg-green-800 rounded-md text-white flex m-1 items-center p-2" {...props}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
