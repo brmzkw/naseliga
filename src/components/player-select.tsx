@@ -10,7 +10,6 @@ type Player = PlayersRouterOutput["list"][number];
 /*
 * Display a big flag on top of the player select input.
 */
-
 const PlayerSelect = React.forwardRef((
     props: React.ComponentPropsWithoutRef<typeof PlayerSelectInput>,
     ref: React.ComponentPropsWithRef<typeof PlayerSelectInput>["ref"]

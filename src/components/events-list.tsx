@@ -2,13 +2,13 @@ import React from 'react';
 
 import { useSession } from 'next-auth/react';
 import type { inferRouterOutputs } from '@trpc/server';
-import { CircleFlag } from 'react-circle-flags'
 import { useForm, Controller } from 'react-hook-form';
 
 import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
 import PlayerSelect from './player-select';
+import PlayerName from './player-name';
 
 type EventsListProps = {
     events?: inferRouterOutputs<typeof eventsRouter>['list']
@@ -185,18 +185,12 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                     {event.matches.map((match) =>
                         <tr key={match.id} className={`border-b border-purple-700`}>
                             <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
-                                <div className="w-8 mr-2">
-                                    {match.playerA.country && <CircleFlag countryCode={match.playerA.country.toLowerCase()} />}
-                                </div>
-                                <div className="capitalize">{match.playerA.name}</div>
+                                <PlayerName player={match.playerB} />
                             </td>
                             <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
 
                             <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
-                                <div className="w-8 mr-2">
-                                    {match.playerB.country && <CircleFlag countryCode={match.playerB.country.toLowerCase()} />}
-                                </div>
-                                <div className="capitalize">{match.playerB.name}</div>
+                                <PlayerName player={match.playerB} />
                             </td>
                             <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
                         </tr>

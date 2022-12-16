@@ -5,10 +5,11 @@ import { type NextPage } from "next";
 import { trpc } from "../utils/trpc";
 
 import BaseLayout from "../layouts/base";
-import { countries, CircleFlag } from "react-circle-flags";
+import { countries } from "react-circle-flags";
 import { useForm } from "react-hook-form";
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
+import PlayerName from "../components/player-name";
 
 const AdminPage: NextPage = () => {
     return (
@@ -87,37 +88,29 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     });
 
     return (
-        <form onSubmit={handleSubmit(editPlayer)} className="flex gap-3 items-center pb-2 border-b">
-            <div>
+        <form onSubmit={handleSubmit(editPlayer)} className="flex gap-1 pb-1 border-b">
+            <div className="flex-1 flex gap-1">
                 {
-                    edit
-                        ?
-                        <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
-                            {
-                                Object.keys(countries).map((country) => (
-                                    <option key={country} value={country}>{country.toLocaleUpperCase()}</option>
-                                ))
-                            }
-                        </select >
-                        :
-                        <div className="w-5">
-                            {player.country && <CircleFlag countryCode={player.country.toLowerCase()} />}
-                        </div>
-                }
-            </div >
-
-            <div className="flex-1">
-                {
-                    edit ?
-                        <input
-                            className="border border-gray-300 p-2"
-                            type="text"
-                            placeholder="Name"
-                            {...register("name")}
-                            required
-                        />
-                        :
-                        <span className="capitalize">{player.name}</span>
+                    edit ? (
+                        <>
+                            <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
+                                {
+                                    Object.keys(countries).map((country) => (
+                                        <option key={country} value={country}>{country.toLocaleUpperCase()}</option>
+                                    ))
+                                }
+                            </select >
+                            <input
+                                className="border border-gray-300 p-2"
+                                type="text"
+                                placeholder="Name"
+                                {...register("name")}
+                                required
+                            />
+                        </>
+                    ) : (
+                        <PlayerName player={player} />
+                    )
                 }
             </div>
 
