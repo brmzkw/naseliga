@@ -55,6 +55,6 @@ const UpdateLeaderboardButton: React.FC = () => {
     }
 
     return (
-        <UpdateButton onClick={onClick} />
+        <UpdateButton text="Update leaderboard" onClick={onClick} />
     );
 };
