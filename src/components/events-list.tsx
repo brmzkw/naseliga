@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
-import PlayerSelectInput from './player-select-input';
+import PlayerSelect from './player-select';
 
 type EventsListProps = {
     events?: inferRouterOutputs<typeof eventsRouter>['list']
@@ -231,7 +231,7 @@ type NewMatchForm = {
 };
 
 const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
-    const { control, register, handleSubmit, watch } = useForm<NewMatchForm>({
+    const { control, register, handleSubmit } = useForm<NewMatchForm>({
         defaultValues: {
             scoreA: "0",
             scoreB: "0",
@@ -265,16 +265,13 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
             <h4 className="text-xl text-center text-bold">Add a new match</h4>
             <form onSubmit={handleSubmit(onSubmit)} className="flex justify-around pt-4 pb-4">
                 <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="w-24 h-24">
-                        {<CircleFlag countryCode={watch('playerA')?.country.toLowerCase()} />}
-                    </div>
                     <div>
                         <Controller
                             name="playerA"
                             control={control}
                             render={
                                 ({ field }) =>
-                                    <PlayerSelectInput
+                                    <PlayerSelect
                                         {...field}
                                         placeholder="First player"
                                         required
@@ -297,16 +294,13 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
                     <AddButton type="submit" />
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="w-24 h-24">
-                        {<CircleFlag countryCode={watch('playerB')?.country.toLowerCase()} />}
-                    </div>
                     <div>
                         <Controller
                             name="playerB"
                             control={control}
                             render={
                                 ({ field }) =>
-                                    <PlayerSelectInput
+                                    <PlayerSelect
                                         {...field}
                                         placeholder="Second player"
                                         required
