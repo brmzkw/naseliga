@@ -124,6 +124,10 @@ function computeNewScores(
     roundsA: number,
     totalRounds: number
 ): [number, number] {
+    if (!totalRounds) {
+        return [scoreA, scoreB];
+    }
+
     const qa = Math.pow(10, scoreA / 400);
     const qb = Math.pow(10, scoreB / 400);
 
