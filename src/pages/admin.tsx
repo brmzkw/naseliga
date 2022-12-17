@@ -83,9 +83,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     });
 
     const removePlayer = () => {
-        if (confirm(`Are you sure you want to remove ${player.name}?`)) {
-            removePlayerMutation.mutate(player);
-        }
+        removePlayerMutation.mutate(player);
     };
 
     const editPlayer = ((data: PlayerForm) => {
