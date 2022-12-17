@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
+import LoadingSpinner from "../components/loading-spinner";
 
 const AdminPage: NextPage = () => {
     return (
@@ -26,18 +27,22 @@ export default AdminPage;
 const PlayersAdmin = () => {
     const playersQuery = trpc.players.list.useQuery();
 
+    if (!playersQuery.data) {
+        return <LoadingSpinner text="Loading players..." />;
+    }
+
     return (
         <div>
             <h2 className="font-bold mb-2">List of players</h2>
 
             <div className="flex flex-col gap-2">
-                {playersQuery.data?.map((player) =>
+                {playersQuery.data.map((player) =>
                     <PlayersListRow key={player.id} player={player} />
                 )}
             </div>
 
             <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
-            {playersQuery.data && <NewPlayer />}
+            <NewPlayer />
         </div>
     );
 };
