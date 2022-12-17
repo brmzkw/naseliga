@@ -1,5 +1,8 @@
+import { Prisma } from "@prisma/client";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { z } from "zod";
+import { TRPCError } from '@trpc/server';
+
 import { router, publicProcedure } from "../trpc";
 
 export type EventsRouterInput = inferRouterInputs<typeof eventsRouter>;
@@ -50,14 +53,26 @@ export const eventsRouter = router({
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
-            const event = await ctx.prisma.event.delete({
-                where: {
-                    id: input.id,
-                },
-            });
-            return {
-                event,
-            };
+            try {
+                const event = await ctx.prisma.event.delete({
+                    where: {
+                        id: input.id,
+                    },
+                });
+                return {
+                    event,
+                };
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    // Foreign key constraint failed
+                    if (e.code == 'P2003') {
+                        throw new TRPCError({
+                            code: 'CONFLICT',
+                            message: 'It is impossible to remove an event containing matches',
+                        });
+                    }
+                }
+            }
         }),
 
     createMatch: publicProcedure
@@ -106,13 +121,26 @@ export const eventsRouter = router({
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
-            const match = await ctx.prisma.match.delete({
-                where: {
-                    id: input.id,
-                },
-            });
-            return {
-                match,
-            };
+            try {
+                const match = await ctx.prisma.match.delete({
+                    where: {
+                        id: input.id,
+                    },
+                });
+                return {
+                    match,
+                };
+            } catch (e) {
+
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    // Foreign key constraint failed
+                    if (e.code == 'P2003') {
+                        throw new TRPCError({
+                            code: 'CONFLICT',
+                            message: 'It is impossible to remove a match if the leaderboard has been generated since its creation',
+                        });
+                    }
+                }
+            }
         }),
 });

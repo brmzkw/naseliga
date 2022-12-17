@@ -35,15 +35,28 @@ export const playersRouter = router({
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
-            const player = await ctx.prisma.player.create({
-                data: {
-                    name: input.name,
-                    country: input.country,
-                },
-            });
-            return {
-                player,
-            };
+            try {
+                const player = await ctx.prisma.player.create({
+                    data: {
+                        name: input.name,
+                        country: input.country,
+                    },
+                });
+                return {
+                    player,
+                };
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    // Unique constraint failed
+                    if (e.code == 'P2002') {
+                        throw new TRPCError({
+                            code: 'CONFLICT',
+                            message: 'A player with this name already exists',
+                        });
+                    }
+                }
+                throw e;
+            }
         }),
 
     delete: publicProcedure
@@ -65,6 +78,7 @@ export const playersRouter = router({
                 };
             } catch (e) {
                 if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    // Foreign key constraint failed
                     if (e.code == 'P2003') {
                         throw new TRPCError({
                             code: 'CONFLICT',

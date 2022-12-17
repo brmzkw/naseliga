@@ -144,7 +144,7 @@ const NewPlayer: React.FC = () => {
             toast.success("Yeah! Player created");
         },
         onError: (err) => {
-            toast.error("Unable to create the player. Is the name already used?");
+            toast.error(err.message);
         },
     });
 

@@ -158,7 +158,7 @@ const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
             toast.success("Event deleted 😵‍💫");
         },
         onError: (err) => {
-            toast.error("Unable to remove event 😭 Usually, it is because there are matches in this event.");
+            toast.error(err.message);
         },
     });
 
@@ -188,8 +188,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
             toast.success("Match deleted 💫");
         },
         onError: (err) => {
-            console.error(err.message);
-            toast.error("Unable to delete the match. If the leaderboard as been updated since the match was created, you can't delete it 👮‍♀️");
+            toast.error(err.message);
         },
     });
 
