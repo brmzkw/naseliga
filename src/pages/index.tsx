@@ -23,7 +23,7 @@ const HomePage: NextPage = () => {
           <LoadingSpinner text="Loading leaderboard..." />
         }
       </div>
-      <div className="flex-1 mt-5 sm:mt-2 ml-2 h-[calc(100vh*0.9)] overflow-scroll">
+      <div className="flex-1 mt-5 sm:mt-2 ml-2 h-screen overflow-scroll">
         {eventsQuery.data ?
           <EventsList events={eventsQuery.data} />
           :
