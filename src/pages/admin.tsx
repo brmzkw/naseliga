@@ -81,6 +81,9 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
             setEdit(false);
             toast.success("Yeah! Player updated");
         },
+        onError: (err) => {
+            toast.error(err.message);
+        }
     });
 
     const removePlayer = () => {
