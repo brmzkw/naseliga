@@ -177,6 +177,17 @@ type MatchListProps = {
 
 const MatchList: React.FC<MatchListProps> = ({ event }) => {
     const { data: sessionData } = useSession();
+    const utils = trpc.useContext();
+
+    const mutation = trpc.events.deleteMatch.useMutation({
+        onSuccess: () => {
+            utils.events.invalidate();
+        },
+        onError: (err) => {
+            console.error(err.message);
+        },
+    });
+
     return (
         <div>
             <table className="m-auto">
@@ -192,6 +203,12 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                                 <PlayerName player={match.playerB} />
                             </td>
                             <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+
+                            {sessionData?.user?.isAdmin &&
+                                <td className="p-3">
+                                    <RemoveButton onClick={() => mutation.mutate({ id: match.id })} />
+                                </td>
+                            }
                         </tr>
                     )}
                 </tbody>
