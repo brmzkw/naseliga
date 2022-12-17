@@ -193,19 +193,19 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
             <table className="m-auto">
                 <tbody>
                     {event.matches.map((match) =>
-                        <tr key={match.id} className={`border-b border-purple-700`}>
-                            <td className={`flex items-center p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
+                        <tr key={match.id} className={`border-b border-purple-700 [&>td]:p-3`}>
+                            <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
                                 <PlayerName player={match.playerB} />
                             </td>
-                            <td className={`p-3 ${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
+                            <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
 
-                            <td className={`flex items-center p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
+                            <td className={`${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
                                 <PlayerName player={match.playerB} />
                             </td>
-                            <td className={`p-3 ${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+                            <td className={`${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
 
                             {sessionData?.user?.isAdmin &&
-                                <td className="p-3">
+                                <td>
                                     <RemoveButton onClick={() => mutation.mutate({ id: match.id })} />
                                 </td>
                             }
