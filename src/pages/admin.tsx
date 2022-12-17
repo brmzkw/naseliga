@@ -120,11 +120,11 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
             </div>
 
             <div className="flex gap-1">
-                {edit && <SubmitButton />}
+                {edit && <SubmitButton disabled={editPlayerMutation.isLoading} />}
                 {edit ||
                     <>
                         <EditButton onClick={() => setEdit(true)} />
-                        <RemoveButton onClick={removePlayer} />
+                        <RemoveButton disabled={removePlayerMutation.isLoading} onClick={removePlayer} />
                     </>
                 }
             </div>
@@ -170,7 +170,7 @@ const NewPlayer: React.FC = () => {
                     required
                 />
 
-                <AddButton type="submit" />
+                <AddButton disabled={mutation.isLoading} type="submit" />
             </form >
         </div>
     );

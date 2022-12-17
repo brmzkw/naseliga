@@ -131,7 +131,7 @@ const NewEvent: React.FC = () => {
                 required
                 {...register("date")}
             />
-            <AddButton type="submit" />
+            <AddButton disabled={mutation.isLoading} type="submit" />
         </form>
     );
 };
@@ -166,7 +166,7 @@ const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
     return (
         <form onSubmit={handleSubmit(removeEvent)}>
             <input type="hidden" {...register("id")} />
-            <RemoveButton type="submit" />
+            <RemoveButton disabled={mutation.isLoading} type="submit" />
         </form>
     )
 };
@@ -206,7 +206,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
 
                             {sessionData?.user?.isAdmin &&
                                 <td>
-                                    <RemoveButton onClick={() => mutation.mutate({ id: match.id })} />
+                                    <RemoveButton disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: match.id })} />
                                 </td>
                             }
                         </tr>
@@ -301,7 +301,7 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
                     </div>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
-                    <AddButton type="submit" />
+                    <AddButton disabled={mutation.isLoading} type="submit" />
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
                     <div>
