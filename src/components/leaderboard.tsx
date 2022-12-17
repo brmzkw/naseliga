@@ -53,6 +53,6 @@ const UpdateLeaderboardButton: React.FC = () => {
     }
 
     return (
-        <UpdateButton text="Update leaderboard" onClick={onClick} />
+        <UpdateButton disabled={mutation.isLoading} text="Update leaderboard" onClick={onClick} />
     );
 };
