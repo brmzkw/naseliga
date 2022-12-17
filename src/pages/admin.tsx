@@ -71,7 +71,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
             toast.success("Yeah! Player removed");
         },
         onError: (err) => {
-            toast.error("Unable to remove the player. It is expected if the player has already played a game.");
+            toast.error(err.message);
         },
     });
 

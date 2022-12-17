@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 
 import { router, publicProcedure } from "../trpc";
 
@@ -53,14 +54,29 @@ export const playersRouter = router({
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
-            const player = await ctx.prisma.player.delete({
-                where: {
-                    id: input.id,
-                },
-            });
-            return {
-                player,
-            };
+            try {
+                const player = await ctx.prisma.player.delete({
+                    where: {
+                        id: input.id,
+                    },
+                });
+                return {
+                    player,
+                };
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    if (e.code == 'P2003') {
+                        throw new TRPCError({
+                            code: 'CONFLICT',
+                            message: 'Unable to remove a player with existing matches',
+                        });
+                    }
+                }
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'An unexpected error occurred while deleting the player',
+                });
+            }
         }),
 
     edit: publicProcedure
