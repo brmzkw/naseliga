@@ -5,8 +5,20 @@ import { type Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+
+  // By default, trpc sends the stack trace of the error to the client. Remove
+  // these sensitive details before sending to the client.
+  errorFormatter({ error, shape }) {
+    const safeMessage = error.code === "INTERNAL_SERVER_ERROR" ? "Internal server error" : shape.message;
+    const { stack, path, ...safeData } = shape.data;
+
+    return {
+      ...shape,
+      message: safeMessage,
+      data: {
+        ...safeData,
+      }
+    };
   },
 });
 

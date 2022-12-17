@@ -68,14 +68,11 @@ export const playersRouter = router({
                     if (e.code == 'P2003') {
                         throw new TRPCError({
                             code: 'CONFLICT',
-                            message: 'Unable to remove a player with existing matches',
+                            message: 'It is impossible to remove a player with existing matches',
                         });
                     }
                 }
-                throw new TRPCError({
-                    code: 'INTERNAL_SERVER_ERROR',
-                    message: 'An unexpected error occurred while deleting the player',
-                });
+                throw e;
             }
         }),
 
