@@ -3,6 +3,7 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import type { inferRouterOutputs } from '@trpc/server';
 import { useForm, Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
@@ -102,9 +103,7 @@ const NewEvent: React.FC = () => {
     const mutation = trpc.events.create.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
-        },
-        onError: (err) => {
-            console.error(err.message);
+            toast.success("Event created ♥️");
         },
     });
 
@@ -153,9 +152,10 @@ const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
     const mutation = trpc.events.delete.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
+            toast.success("Event deleted 😵‍💫");
         },
         onError: (err) => {
-            console.error(err.message);
+            toast.error("Unable to remove event 😭 Usually, it is because there are matches in this event.");
         },
     });
 
@@ -182,9 +182,11 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
     const mutation = trpc.events.deleteMatch.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
+            toast.success("Match deleted 💫");
         },
         onError: (err) => {
             console.error(err.message);
+            toast.error("Unable to delete the match. If the leaderboard as been updated since the match was created, you can't delete it 👮‍♀️");
         },
     });
 
@@ -253,9 +255,7 @@ const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
     const mutation = trpc.events.createMatch.useMutation({
         onSuccess: () => {
             utils.events.invalidate();
-        },
-        onError: (err) => {
-            console.error('Error while creating match', err);
+            toast.success("Match created 🎉");
         },
     });
 

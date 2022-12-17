@@ -2,11 +2,13 @@ import React from "react";
 
 import { type NextPage } from "next";
 
+import toast from 'react-hot-toast';
+import { countries } from "react-circle-flags";
+import { useForm } from "react-hook-form";
+
 import { trpc } from "../utils/trpc";
 
 import BaseLayout from "../layouts/base";
-import { countries } from "react-circle-flags";
-import { useForm } from "react-hook-form";
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
@@ -66,9 +68,10 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const removePlayerMutation = trpc.players.delete.useMutation({
         onSuccess: () => {
             utils.players.invalidate();
+            toast.success("Yeah! Player removed");
         },
         onError: (err) => {
-            console.error(err.message);
+            toast.error("Unable to remove the player. It is expected if the player has already played a game.");
         },
     });
 
@@ -76,9 +79,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
         onSuccess: () => {
             utils.players.invalidate();
             setEdit(false);
-        },
-        onError: (err) => {
-            console.error(err.message);
+            toast.success("Yeah! Player updated");
         },
     });
 
@@ -140,11 +141,11 @@ const NewPlayer: React.FC = () => {
         onSuccess: () => {
             utils.players.invalidate();
             reset();
+            toast.success("Yeah! Player created");
         },
         onError: (err) => {
-            console.error('Error while creating player', err);
+            toast.error("Unable to create the player. Is the name already used?");
         },
-
     });
 
     const onSubmit = ((data: PlayerForm) => {

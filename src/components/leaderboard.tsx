@@ -2,6 +2,8 @@ import React from "react";
 
 import { useSession } from "next-auth/react";
 
+import toast from 'react-hot-toast';
+
 import type { PlayerWithScore } from "../server/trpc/router/leaderboard";
 import { UpdateButton } from "./buttons";
 import { trpc } from "../utils/trpc";
@@ -42,9 +44,7 @@ const UpdateLeaderboardButton: React.FC = () => {
     const mutation = trpc.leaderboard.update.useMutation({
         onSuccess: () => {
             utils.leaderboard.invalidate();
-        },
-        onError: (err) => {
-            console.error(err);
+            toast.success("Hoora! Leaderboard updated :))");
         },
     });
 

@@ -2,6 +2,8 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
+import { Toaster } from 'react-hot-toast';
+
 import { trpc } from "../utils/trpc";
 import { Mulish } from '@next/font/google'
 
@@ -22,6 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   `}</style>
       <SessionProvider session={session}>
         <Component {...pageProps} />
+        <Toaster />
       </SessionProvider>
     </>
   );
