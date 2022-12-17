@@ -94,10 +94,13 @@ type NewEventForm = Omit<Omit<EventsRouterInput["create"], "id">, "date"> & {
 const NewEvent: React.FC = () => {
     const utils = trpc.useContext();
 
+    const today = new Date();
+
     const { register, handleSubmit, reset } = useForm<NewEventForm>({
         defaultValues: {
-            date: new Date().toISOString().split('T')[0],
-        },
+            date: today.toISOString().split('T')[0],
+            title: `${today.toLocaleString('default', { weekday: 'long' })} squash`,
+        }
     });
 
     const mutation = trpc.events.create.useMutation({
@@ -120,7 +123,7 @@ const NewEvent: React.FC = () => {
             <input
                 className="border border-gray-300 p-2"
                 type="text"
-                placeholder="title"
+                placeholder="Event title"
                 {...register("title")}
             />
             <input
