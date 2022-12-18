@@ -199,7 +199,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                     {event.matches.map((match) =>
                         <tr key={match.id} className={`border-b border-purple-700 [&>td]:p-3`}>
                             <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
-                                <PlayerName player={match.playerB} />
+                                <PlayerName player={match.playerA} />
                             </td>
                             <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
 
