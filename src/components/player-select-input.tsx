@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { CircleFlag } from "react-circle-flags";
-import Select, { type Props, type GroupBase } from 'react-select';
+import Select, { type Props, type GroupBase, createFilter } from 'react-select';
 import type { PlayersRouterOutput } from '../server/trpc/router/players';
 
 import { trpc } from '../utils/trpc';
@@ -37,6 +37,9 @@ const PlayerSelectInput = React.forwardRef((
             options={query.data}
             formatOptionLabel={formatOptionLabel}
             getOptionValue={(player) => player.id.toString()}
+            filterOption={createFilter({
+                stringify: (option) => option.data.name,
+            })}
             {...props}
         />
     );
