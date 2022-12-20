@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { CircleFlag } from "react-circle-flags";
 import Select, { type Props, type GroupBase, createFilter } from 'react-select';
 import type { PlayersRouterOutput } from '../server/trpc/router/players';
 
 import { trpc } from '../utils/trpc';
+import PlayerName from './player-name';
 
 type Player = PlayersRouterOutput["list"][number];
 
@@ -18,28 +18,19 @@ const PlayerSelectInput = React.forwardRef((
 
     const query = trpc.players.list.useQuery();
 
-    const formatOptionLabel = ({ name, country }: Player) => {
-        return (
-            <div className="flex items-center">
-                <div className="w-5">
-                    {country && <CircleFlag countryCode={country.toLowerCase()} />}
-                </div>
-                <div className="ml-2 capitalize">
-                    {name}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <Select
             ref={ref}
             options={query.data}
-            formatOptionLabel={formatOptionLabel}
+            formatOptionLabel={(player) =>
+                <PlayerName player={player} />
+            }
             getOptionValue={(player) => player.id.toString()}
-            filterOption={createFilter({
-                stringify: (option) => option.data.name,
-            })}
+            filterOption={
+                createFilter({
+                    stringify: (option) => option.data.name,
+                })
+            }
             {...props}
         />
     );
