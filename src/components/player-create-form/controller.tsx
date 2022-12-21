@@ -22,7 +22,7 @@ const PlayerCreateController: React.FC<NewPlayerControllerProps> = ({ onSubmit, 
             onSubmit={
                 async (data) => {
                     try {
-                        const ret = await onSubmit(data);
+                        await onSubmit(data);
                         form.reset();
                         toast.success("Yeah! Player created");
                     } catch (err) {

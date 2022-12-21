@@ -1,7 +1,7 @@
 import React from "react";
 
 import { countries } from "react-circle-flags";
-import { useForm } from "react-hook-form";
+import type { useForm } from "react-hook-form";
 
 import type { PlayerFormSchema } from "./controller";
 import { AddButton } from "../buttons";
