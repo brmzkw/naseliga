@@ -10,9 +10,12 @@ import { trpc } from "../utils/trpc";
 
 import BaseLayout from "../layouts/base";
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
-import { AddButton, EditButton, RemoveButton, SubmitButton } from "../components/buttons";
+import { EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
 import LoadingSpinner from "../components/loading-spinner";
+import PlayerForm from "../components/player-form";
+
+type PlayerForm = PlayersRouterInput["create"];
 
 const AdminPage: NextPage = () => {
     return (
@@ -44,7 +47,7 @@ const PlayersAdmin = () => {
             </div>
 
             <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
-            <NewPlayer />
+            <PlayerForm />
         </div>
     );
 };
@@ -131,49 +134,5 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
                 }
             </div>
         </form>
-    );
-};
-
-type PlayerForm = PlayersRouterInput["create"];
-
-const NewPlayer: React.FC = () => {
-    const { register, handleSubmit, reset } = useForm<PlayerForm>();
-
-    const utils = trpc.useContext();
-    const mutation = trpc.players.create.useMutation({
-        onSuccess: () => {
-            utils.players.invalidate();
-            reset();
-            toast.success("Yeah! Player created");
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        },
-    });
-
-    const onSubmit = ((data: PlayerForm) => {
-        mutation.mutate(data);
-    });
-
-    return (
-        <div>
-            <form className="flex" onSubmit={handleSubmit(onSubmit)}>
-                <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
-                    {Object.keys(countries).map((country) => (
-                        <option key={country} value={country}>{country.toLocaleUpperCase()}</option>
-                    ))}
-                </select>
-
-                <input
-                    className="border border-gray-300 p-2"
-                    type="text"
-                    placeholder="Name"
-                    {...register("name")}
-                    required
-                />
-
-                <AddButton disabled={mutation.isLoading} type="submit" />
-            </form >
-        </div>
     );
 };
