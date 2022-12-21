@@ -12,7 +12,7 @@ type PlayerViewProps = {
     isLoading: boolean;
 };
 
-const PlayerView: React.FC<PlayerViewProps> = ({ form, onSubmit, isLoading }) => {
+const PlayerCreateView: React.FC<PlayerViewProps> = ({ form, onSubmit, isLoading }) => {
     const { register, handleSubmit } = form;
     return (
         <div>
@@ -37,4 +37,4 @@ const PlayerView: React.FC<PlayerViewProps> = ({ form, onSubmit, isLoading }) =>
     );
 };
 
-export default PlayerView;
+export default PlayerCreateView;

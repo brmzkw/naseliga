@@ -6,7 +6,7 @@ import PlayerController from "./controller";
 
 export type PlayerCreateOutput = PlayersRouterOutput["create"];
 
-const PlayerForm: React.FC = () => {
+const PlayerCreateForm: React.FC = () => {
     const utils = trpc.useContext();
 
     const mutation = trpc.players.create.useMutation({
@@ -18,4 +18,4 @@ const PlayerForm: React.FC = () => {
     return <PlayerController onSubmit={mutation.mutateAsync} {...mutation} />;
 };
 
-export default PlayerForm;
+export default PlayerCreateForm;

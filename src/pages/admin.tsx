@@ -13,7 +13,7 @@ import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/rou
 import { EditButton, RemoveButton, SubmitButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
 import LoadingSpinner from "../components/loading-spinner";
-import PlayerForm from "../components/player-form";
+import PlayerCreateForm from "../components/player-create-form";
 
 type PlayerForm = PlayersRouterInput["create"];
 
@@ -47,7 +47,7 @@ const PlayersAdmin = () => {
             </div>
 
             <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
-            <PlayerForm />
+            <PlayerCreateForm />
         </div>
     );
 };

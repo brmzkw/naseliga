@@ -5,20 +5,20 @@ import { useForm } from "react-hook-form";
 
 import type { PlayersRouterInput } from "../../server/trpc/router/players";
 import type { PlayerCreateOutput } from ".";
-import PlayerView from "./view";
+import PlayerCreateView from "./view";
 import { TRPCClientError } from "@trpc/client";
 
 export type PlayerFormSchema = PlayersRouterInput["create"];
 
 type NewPlayerControllerProps = {
     onSubmit: (data: PlayerFormSchema) => Promise<PlayerCreateOutput>;
-} & Omit<React.ComponentPropsWithoutRef<typeof PlayerView>, "form" | "onSubmit">;
+} & Omit<React.ComponentPropsWithoutRef<typeof PlayerCreateView>, "form" | "onSubmit">;
 
-const NewPlayerController: React.FC<NewPlayerControllerProps> = ({ onSubmit, ...props }) => {
+const PlayerCreateController: React.FC<NewPlayerControllerProps> = ({ onSubmit, ...props }) => {
     const form = useForm<PlayerFormSchema>();
 
     return (
-        <PlayerView
+        <PlayerCreateView
             form={form}
             onSubmit={
                 async (data) => {
@@ -38,4 +38,4 @@ const NewPlayerController: React.FC<NewPlayerControllerProps> = ({ onSubmit, ...
     );
 };
 
-export default NewPlayerController;
+export default PlayerCreateController;
