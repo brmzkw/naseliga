@@ -12,10 +12,9 @@ export type PlayerFormSchema = PlayersRouterInput["create"];
 
 type NewPlayerControllerProps = {
     onSubmit: (data: PlayerFormSchema) => Promise<PlayerCreateOutput>;
-    isLoading: boolean;
-};
+} & Omit<React.ComponentPropsWithoutRef<typeof PlayerView>, "form" | "onSubmit">;
 
-const NewPlayerController: React.FC<NewPlayerControllerProps> = ({ onSubmit, isLoading }) => {
+const NewPlayerController: React.FC<NewPlayerControllerProps> = ({ onSubmit, ...props }) => {
     const form = useForm<PlayerFormSchema>();
 
     return (
@@ -34,7 +33,8 @@ const NewPlayerController: React.FC<NewPlayerControllerProps> = ({ onSubmit, isL
                     }
                 }
             }
-            isLoading={isLoading} />
+            {...props}
+        />
     );
 };
 

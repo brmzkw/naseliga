@@ -15,7 +15,7 @@ const PlayerForm: React.FC = () => {
         },
     });
 
-    return <PlayerController onSubmit={mutation.mutateAsync} isLoading={mutation.isLoading} />;
+    return <PlayerController onSubmit={mutation.mutateAsync} {...mutation} />;
 };
 
 export default PlayerForm;
