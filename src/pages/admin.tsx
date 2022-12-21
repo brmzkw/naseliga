@@ -10,10 +10,11 @@ import { trpc } from "../utils/trpc";
 
 import BaseLayout from "../layouts/base";
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
-import { EditButton, RemoveButton, SubmitButton } from "../components/buttons";
+import { EditButton, SubmitButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
 import LoadingSpinner from "../components/loading-spinner";
 import PlayerCreateForm from "../components/player-create-form";
+import PlayerRemoveButton from "../components/player-remove-button";
 
 type PlayerForm = PlayersRouterInput["create"];
 
@@ -68,16 +69,6 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
 
     const utils = trpc.useContext();
 
-    const removePlayerMutation = trpc.players.delete.useMutation({
-        onSuccess: () => {
-            utils.players.invalidate();
-            toast.success("Yeah! Player removed");
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        },
-    });
-
     const editPlayerMutation = trpc.players.edit.useMutation({
         onSuccess: () => {
             utils.players.invalidate();
@@ -88,10 +79,6 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
             toast.error(err.message);
         }
     });
-
-    const removePlayer = () => {
-        removePlayerMutation.mutate(player);
-    };
 
     const editPlayer = ((data: PlayerForm) => {
         editPlayerMutation.mutate({ id: player.id, ...data });
@@ -129,7 +116,7 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
                 {edit ||
                     <>
                         <EditButton onClick={() => setEdit(true)} />
-                        <RemoveButton disabled={removePlayerMutation.isLoading} onClick={removePlayer} />
+                        <PlayerRemoveButton player={player} />
                     </>
                 }
             </div>

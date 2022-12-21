@@ -3,15 +3,14 @@ import React from "react";
 import toast from 'react-hot-toast';
 import { useForm } from "react-hook-form";
 
-import type { PlayersRouterInput } from "../../server/trpc/router/players";
-import type { PlayerCreateOutput } from ".";
+import type { PlayersRouterInput, PlayersRouterOutput } from "../../server/trpc/router/players";
 import PlayerCreateView from "./view";
 import { TRPCClientError } from "@trpc/client";
 
 export type PlayerFormSchema = PlayersRouterInput["create"];
 
 type NewPlayerControllerProps = {
-    onSubmit: (data: PlayerFormSchema) => Promise<PlayerCreateOutput>;
+    onSubmit: (data: PlayerFormSchema) => Promise<PlayersRouterOutput["create"]>;
 } & Omit<React.ComponentPropsWithoutRef<typeof PlayerCreateView>, "form" | "onSubmit">;
 
 const PlayerCreateController: React.FC<NewPlayerControllerProps> = ({ onSubmit, ...props }) => {
