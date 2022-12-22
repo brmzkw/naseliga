@@ -1,22 +1,24 @@
 import React from 'react';
 
 import { useSession } from 'next-auth/react';
-import type { inferRouterOutputs } from '@trpc/server';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import type { eventsRouter, EventsRouterOutput, EventsRouterInput } from '../server/trpc/router/events';
+import type { EventsRouterOutput, EventsRouterInput, eventsRouter } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
 import PlayerSelect from './player-select';
 import PlayerName from './player-name';
+import LoadingSpinner from './loading-spinner';
+import type { inferRouterOutputs } from '@trpc/server';
 
-type EventsListProps = {
-    events: inferRouterOutputs<typeof eventsRouter>['list']
-}
-
-const EventsList: React.FC<EventsListProps> = ({ events }) => {
+const EventsList: React.FC = () => {
+    const query = trpc.events.list.useQuery();
     const { data: sessionData } = useSession();
+
+    if (!query.data) {
+        return <LoadingSpinner text="Loading events..." />;
+    }
 
     return (
         <div className="flex flex-col gap-3 pl-2">
@@ -29,7 +31,7 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
 
             <h2 className="font-bold text-xl">Last events</h2>
             <ul>
-                {events.map((event, idx) =>
+                {query.data.map((event, idx) =>
                     <li key={event.id} className="[&:not(:first-child)]:mt-4">
                         <Event defaultOpen={idx == 0} event={event} />
                     </li>
@@ -42,8 +44,8 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
 export default EventsList;
 
 type EventProps = {
-    defaultOpen: boolean,
-    event: NonNullable<EventsListProps["events"]>[number],
+    defaultOpen: boolean
+    event: inferRouterOutputs<typeof eventsRouter>['list'][number];
 }
 
 const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
