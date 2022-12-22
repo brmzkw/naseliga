@@ -18,4 +18,6 @@ const CountrySelect = React.forwardRef<HTMLSelectElement, CountrySelectProps>(({
     );
 });
 
+CountrySelect.displayName = "CountrySelect";
+
 export default CountrySelect;
