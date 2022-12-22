@@ -2,12 +2,9 @@ import React from "react";
 
 import { useSession } from "next-auth/react";
 
-import toast from 'react-hot-toast';
-
 import type { PlayerWithScore } from "../server/trpc/router/leaderboard";
-import { UpdateButton } from "./buttons";
-import { trpc } from "../utils/trpc";
 import PlayerName from "./player-name";
+import LeaderboardUpdateButton from "./leaderboard-update-button";
 
 
 type LeaderboardProps = {
@@ -19,7 +16,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard }) => {
 
     return (
         <div className="flex flex-col items-center">
-            {sessionData?.user?.isAdmin && <UpdateLeaderboardButton />}
+            {sessionData?.user?.isAdmin && <LeaderboardUpdateButton />}
             <table className="table-auto w-full">
                 <tbody>
                     {leaderboard.map((entry, idx) =>
@@ -38,21 +35,3 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard }) => {
 };
 
 export default Leaderboard;
-
-const UpdateLeaderboardButton: React.FC = () => {
-    const utils = trpc.useContext();
-    const mutation = trpc.leaderboard.update.useMutation({
-        onSuccess: () => {
-            utils.leaderboard.invalidate();
-            toast.success("Hoora! Leaderboard updated :))");
-        },
-    });
-
-    const onClick = () => {
-        mutation.mutate();
-    }
-
-    return (
-        <UpdateButton disabled={mutation.isLoading} text="Update leaderboard" onClick={onClick} />
-    );
-};
