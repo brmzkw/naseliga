@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
 
-import type { PlayersRouterInput } from "../server/trpc/router/players";
+import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { trpc } from "../utils/trpc";
 import { RemoveButton } from "./buttons";
 
@@ -15,15 +15,12 @@ const PlayerRemoveButton: React.FC<PlayerRemoveButtonProps> = ({ player }) => {
     const mutation = trpc.players.delete.useMutation({
         onSuccess: () => {
             utils.players.invalidate();
-            toast.success("Yeah! Player removed");
-        },
-        onError: (err) => {
-            toast.error(err.message);
         }
     });
+
     return (
         <PlayerRemoveButtonView
-            onClick={() => mutation.mutate(player)}
+            onClick={() => mutation.mutateAsync(player)}
             isLoading={mutation.isLoading}
         />
     );
@@ -33,11 +30,18 @@ export default PlayerRemoveButton;
 
 type PlayerRemoveButtonViewProps = {
     isLoading: boolean;
-    onClick: () => void;
+    onClick: () => Promise<PlayersRouterOutput["delete"]>;
 };
 
 const PlayerRemoveButtonView: React.FC<PlayerRemoveButtonViewProps> = ({ onClick, isLoading }) => {
     return (
-        <RemoveButton disabled={isLoading} onClick={onClick} />
+        <RemoveButton
+            disabled={isLoading}
+            onClick={() => onClick().then(() => {
+                toast.success("Yeah! Player removed");
+            }).catch((err) => {
+                toast.error(err.message);
+            })}
+        />
     );
 };
