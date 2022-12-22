@@ -14,39 +14,32 @@ import PlayerRemoveButton from "../components/player-remove-button";
 import PlayerEditForm from "../components/player-edit-form";
 
 const AdminPage: NextPage = () => {
+    const playersQuery = trpc.players.list.useQuery();
+
+    if (!playersQuery.data) {
+        return <LoadingSpinner text="Loading players..." />;
+    }
     return (
         <BaseLayout>
             <div className="m-3">
-                <PlayersAdmin />
+                <div>
+                    <h2 className="font-bold mb-2">List of players</h2>
+
+                    <div className="flex flex-col gap-2">
+                        {playersQuery.data.map((player) =>
+                            <PlayersListRow key={player.id} player={player} />
+                        )}
+                    </div>
+
+                    <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
+                    <PlayerCreateForm />
+                </div>
             </div>
         </BaseLayout>
     );
 }
 
 export default AdminPage;
-
-const PlayersAdmin = () => {
-    const playersQuery = trpc.players.list.useQuery();
-
-    if (!playersQuery.data) {
-        return <LoadingSpinner text="Loading players..." />;
-    }
-
-    return (
-        <div>
-            <h2 className="font-bold mb-2">List of players</h2>
-
-            <div className="flex flex-col gap-2">
-                {playersQuery.data.map((player) =>
-                    <PlayersListRow key={player.id} player={player} />
-                )}
-            </div>
-
-            <h2 className="font-bold mt-2 mb-2">Add a new player</h2>
-            <PlayerCreateForm />
-        </div>
-    );
-};
 
 type PlayersListRowProps = {
     player: PlayersRouterOutput['list'][number]
@@ -55,24 +48,18 @@ type PlayersListRowProps = {
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
+    if (edit) {
+        return (
+            <PlayerEditForm player={player} onFinished={() => setEdit(false)} />
+        );
+    }
     return (
-        <div className="flex gap-1 pb-1 border-b">
-            <div className="flex-1 flex gap-1">
-                {
-                    edit
-                        ? <PlayerEditForm player={player} onFinished={() => setEdit(false)} />
-                        : <PlayerName player={player} />
-                }
+        <div className="flex gap-1 pb-1 border-b items-center">
+            <div className="flex-1">
+                <PlayerName player={player} />
             </div>
-
-            <div className="flex gap-1">
-                {edit ||
-                    <>
-                        <EditButton onClick={() => setEdit(true)} />
-                        <PlayerRemoveButton player={player} />
-                    </>
-                }
-            </div>
+            <EditButton onClick={() => setEdit(true)} />
+            <PlayerRemoveButton player={player} />
         </div>
     );
 };
