@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { countries } from "react-circle-flags";
 import toast from 'react-hot-toast';
 
 import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
 import { SubmitButton } from "./buttons";
 import { trpc } from "../utils/trpc";
+import CountrySelect from "./country-select";
 
 
 type PlayerForm = Omit<PlayersRouterInput["edit"], "id">;
@@ -63,15 +63,7 @@ const PlayerEditFormView: React.FC<PlayerEditFormViewProps> = ({ form, editPlaye
 
     return (
         <form onSubmit={doSubmit} className="flex gap-1" >
-            <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
-                {
-                    Object.keys(countries).map((country) => (
-                        <option key={country} value={country}>
-                            {country.toLocaleUpperCase()}
-                        </option>
-                    ))
-                }
-            </select >
+            <CountrySelect {...register("country")} />
             <input
                 className="border border-gray-300 p-2"
                 type="text"
