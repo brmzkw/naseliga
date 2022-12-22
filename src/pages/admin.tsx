@@ -2,21 +2,16 @@ import React from "react";
 
 import { type NextPage } from "next";
 
-import toast from 'react-hot-toast';
-import { countries } from "react-circle-flags";
-import { useForm } from "react-hook-form";
-
 import { trpc } from "../utils/trpc";
 
 import BaseLayout from "../layouts/base";
-import type { PlayersRouterInput, PlayersRouterOutput } from "../server/trpc/router/players";
-import { EditButton, SubmitButton } from "../components/buttons";
+import type { PlayersRouterOutput } from "../server/trpc/router/players";
+import { EditButton } from "../components/buttons";
 import PlayerName from "../components/player-name";
 import LoadingSpinner from "../components/loading-spinner";
 import PlayerCreateForm from "../components/player-create-form";
 import PlayerRemoveButton from "../components/player-remove-button";
-
-type PlayerForm = PlayersRouterInput["create"];
+import PlayerEditForm from "../components/player-edit-form";
 
 const AdminPage: NextPage = () => {
     return (
@@ -60,59 +55,17 @@ type PlayersListRowProps = {
 const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
-    const { register, handleSubmit } = useForm<PlayerForm>({
-        defaultValues: {
-            country: player.country.toLocaleLowerCase(),
-            name: player.name,
-        },
-    });
-
-    const utils = trpc.useContext();
-
-    const editPlayerMutation = trpc.players.edit.useMutation({
-        onSuccess: () => {
-            utils.players.invalidate();
-            setEdit(false);
-            toast.success("Yeah! Player updated");
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
-
-    const editPlayer = ((data: PlayerForm) => {
-        editPlayerMutation.mutate({ id: player.id, ...data });
-    });
-
     return (
-        <form onSubmit={handleSubmit(editPlayer)} className="flex gap-1 pb-1 border-b">
+        <div className="flex gap-1 pb-1 border-b">
             <div className="flex-1 flex gap-1">
                 {
-                    edit ? (
-                        <>
-                            <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
-                                {
-                                    Object.keys(countries).map((country) => (
-                                        <option key={country} value={country}>{country.toLocaleUpperCase()}</option>
-                                    ))
-                                }
-                            </select >
-                            <input
-                                className="border border-gray-300 p-2"
-                                type="text"
-                                placeholder="Name"
-                                {...register("name")}
-                                required
-                            />
-                        </>
-                    ) : (
-                        <PlayerName player={player} />
-                    )
+                    edit
+                        ? <PlayerEditForm player={player} onFinished={() => setEdit(false)} />
+                        : <PlayerName player={player} />
                 }
             </div>
 
             <div className="flex gap-1">
-                {edit && <SubmitButton disabled={editPlayerMutation.isLoading} />}
                 {edit ||
                     <>
                         <EditButton onClick={() => setEdit(true)} />
@@ -120,6 +73,6 @@ const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
                     </>
                 }
             </div>
-        </form>
+        </div>
     );
 };

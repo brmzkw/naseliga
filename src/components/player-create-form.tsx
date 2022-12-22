@@ -24,7 +24,7 @@ const PlayerCreateForm: React.FC = () => {
     return (
         <PlayerCreateView
             form={form}
-            onSubmit={mutation.mutateAsync}
+            createPlayer={mutation.mutateAsync}
             isLoading={mutation.isLoading}
         />
     );
@@ -34,22 +34,22 @@ export default PlayerCreateForm;
 
 type PlayerViewProps = {
     form: ReturnType<typeof useForm<PlayerFormSchema>>;
-    onSubmit: (data: PlayerFormSchema) => Promise<PlayersRouterOutput["create"]>;
+    createPlayer: (data: PlayerFormSchema) => Promise<PlayersRouterOutput["create"]>;
     isLoading: boolean;
 };
 
-const PlayerCreateView: React.FC<PlayerViewProps> = ({ form, onSubmit, isLoading }) => {
+const PlayerCreateView: React.FC<PlayerViewProps> = ({ form, createPlayer, isLoading }) => {
     const { register, handleSubmit } = form;
+
+    const doSubmit = handleSubmit((data) =>
+        createPlayer(data)
+            .then(() => toast.success("Yeah! Player created"))
+            .catch((err) => toast.error(err.message))
+    );
 
     return (
         <div>
-            <form className="flex" onSubmit={handleSubmit((data) =>
-                onSubmit(data).then(() => {
-                    toast.success("Yeah! Player created");
-                }).catch((err) => {
-                    toast.error(err.message);
-                })
-            )}>
+            <form className="flex" onSubmit={doSubmit}>
                 <select className="border border-gray-300 p-2 overflow-hidden w-20" {...register("country")}>
                     {Object.keys(countries).map((country) => (
                         <option key={country} value={country}>{country.toLocaleUpperCase()}</option>

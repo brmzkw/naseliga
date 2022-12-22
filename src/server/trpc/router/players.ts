@@ -122,8 +122,8 @@ export const playersRouter = router({
                             message: 'Another player with this name already exists',
                         });
                     }
-                    throw e;
                 }
+                throw e;
             }
         }),
 });

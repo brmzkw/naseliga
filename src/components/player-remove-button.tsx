@@ -34,14 +34,15 @@ type PlayerRemoveButtonViewProps = {
 };
 
 const PlayerRemoveButtonView: React.FC<PlayerRemoveButtonViewProps> = ({ onClick, isLoading }) => {
+    const doClick = () =>
+        onClick()
+            .then(() => toast.success("Yeah! Player removed"))
+            .catch((err) => toast.error(err.message))
+
     return (
         <RemoveButton
             disabled={isLoading}
-            onClick={() => onClick().then(() => {
-                toast.success("Yeah! Player removed");
-            }).catch((err) => {
-                toast.error(err.message);
-            })}
+            onClick={doClick}
         />
     );
 };
