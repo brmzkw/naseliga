@@ -1,11 +1,8 @@
 import React from 'react';
 
 import { useSession } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
-import type { EventsRouterOutput, EventsRouterInput, eventsRouter } from '../server/trpc/router/events';
-import { AddButton } from './buttons';
+import type { EventsRouterOutput, eventsRouter } from '../server/trpc/router/events';
 import { trpc } from '../utils/trpc';
 import PlayerName from './player-name';
 import LoadingSpinner from './loading-spinner';
@@ -13,6 +10,7 @@ import type { inferRouterOutputs } from '@trpc/server';
 import MatchCreateForm from './match-create-form';
 import MatchRemoveButton from './match-remove-button';
 import EventRemoveButton from './event-remove-button';
+import EventCreateForm from './event-create-form';
 
 const EventsList: React.FC = () => {
     const query = trpc.events.list.useQuery();
@@ -27,7 +25,7 @@ const EventsList: React.FC = () => {
             {sessionData?.user?.isAdmin && (
                 <>
                     <h2 className="font-bold text-xl">Create a new event</h2>
-                    <NewEvent />
+                    <EventCreateForm />
                 </>
             )}
 
@@ -87,58 +85,6 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
                 </>
             }
         </>
-    );
-};
-
-// Same as EventsRouterInput["create"] but without id, and date as string
-type NewEventForm = Omit<Omit<EventsRouterInput["create"], "id">, "date"> & {
-    date: string,
-};
-
-const NewEvent: React.FC = () => {
-    const utils = trpc.useContext();
-
-    const today = new Date();
-
-    const { register, handleSubmit, reset } = useForm<NewEventForm>({
-        defaultValues: {
-            date: today.toISOString().split('T')[0],
-            title: `${today.toLocaleString('default', { weekday: 'long' })} squash`,
-        }
-    });
-
-    const mutation = trpc.events.create.useMutation({
-        onSuccess: () => {
-            utils.events.invalidate();
-            toast.success("Event created ♥️");
-        },
-    });
-
-    const createNewEvent = (data: NewEventForm) => {
-        mutation.mutate({
-            ...data,
-            date: new Date(data.date),
-        });
-        reset();
-    };
-
-    return (
-        <form className="flex gap-2" onSubmit={handleSubmit(createNewEvent)}>
-            <input
-                className="border border-gray-300 p-2"
-                type="text"
-                placeholder="Event title"
-                {...register("title")}
-            />
-            <input
-                className="border border-gray-300 p-2"
-                type="date"
-                placeholder="Date"
-                required
-                {...register("date")}
-            />
-            <AddButton disabled={mutation.isLoading} type="submit" />
-        </form>
     );
 };
 
