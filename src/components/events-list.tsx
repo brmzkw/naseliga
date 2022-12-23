@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import type { EventsRouterOutput, EventsRouterInput, eventsRouter } from '../server/trpc/router/events';
-import { AddButton, RemoveButton } from './buttons';
+import { AddButton } from './buttons';
 import { trpc } from '../utils/trpc';
 import PlayerName from './player-name';
 import LoadingSpinner from './loading-spinner';
 import type { inferRouterOutputs } from '@trpc/server';
 import MatchCreateForm from './match-create-form';
 import MatchRemoveButton from './match-remove-button';
+import EventRemoveButton from './event-remove-button';
 
 const EventsList: React.FC = () => {
     const query = trpc.events.list.useQuery();
@@ -79,7 +80,7 @@ const Event: React.FC<EventProps> = ({ defaultOpen, event }) => {
             {clicked &&
                 <>
                     {sessionData?.user?.isAdmin && <div className="mt-3">
-                        <DeleteEvent event={event} />
+                        <EventRemoveButton event={event} />
                     </div>
                     }
                     <MatchList event={event} />
@@ -139,42 +140,6 @@ const NewEvent: React.FC = () => {
             <AddButton disabled={mutation.isLoading} type="submit" />
         </form>
     );
-};
-
-type DeleteEventProps = {
-    event: EventsRouterOutput["list"][number],
-};
-
-type DeleteEventForm = EventsRouterInput["delete"];
-
-const DeleteEvent: React.FC<DeleteEventProps> = ({ event }) => {
-    const utils = trpc.useContext();
-    const { register, handleSubmit } = useForm<DeleteEventForm>({
-        defaultValues: {
-            id: event?.id,
-        }
-    });
-
-    const mutation = trpc.events.delete.useMutation({
-        onSuccess: () => {
-            utils.events.invalidate();
-            toast.success("Event deleted 😵‍💫");
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        },
-    });
-
-    const removeEvent = (data: DeleteEventForm) => {
-        mutation.mutate(data);
-    };
-
-    return (
-        <form onSubmit={handleSubmit(removeEvent)}>
-            <input type="hidden" {...register("id")} />
-            <RemoveButton disabled={mutation.isLoading} type="submit" />
-        </form>
-    )
 };
 
 type MatchListProps = {
