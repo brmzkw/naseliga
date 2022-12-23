@@ -19,15 +19,13 @@ const Leaderboard: React.FC = () => {
         <div className="flex flex-col items-center">
             {sessionData?.user?.isAdmin && <LeaderboardUpdateButton />}
             <table className="table-auto w-full">
-                {sessionData?.user?.isAdmin && (
-                    <thead>
-                        <tr className="bg-red-300 text-center text-slate-700 font-bold">
-                            <td colSpan={4} className="p-2">
-                                To update the leaderboard, you might have to click on the button several times — I need to optimize this.
-                            </td>
-                        </tr>
-                    </thead>
-                )}
+                <thead>
+                    <tr className="bg-red-300 text-center text-slate-700 font-bold">
+                        <td colSpan={4} className="p-2">
+                            The leaderboard is broken, I'm working on a fix — Julien
+                        </td>
+                    </tr>
+                </thead>
                 <tbody>
                     {query.data.leaderboard.map((entry, idx) =>
                         <tr key={entry.id} className="border-b border-gray-300">
