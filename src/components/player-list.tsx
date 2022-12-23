@@ -9,7 +9,7 @@ import LoadingSpinner from "./loading-spinner";
 import PlayerRemoveButton from "./player-remove-button";
 import PlayerEditForm from "./player-edit-form";
 
-const PlayersList: React.FC = () => {
+const PlayerList: React.FC = () => {
     const playersQuery = trpc.players.list.useQuery();
 
     if (!playersQuery.data) {
@@ -18,19 +18,19 @@ const PlayersList: React.FC = () => {
     return (
         <div className="flex flex-col gap-2">
             {playersQuery.data.map((player) =>
-                <PlayersListRow key={player.id} player={player} />
+                <PlayerListRow key={player.id} player={player} />
             )}
         </div>
     );
 }
 
-export default PlayersList;
+export default PlayerList;
 
 type PlayersListRowProps = {
     player: PlayersRouterOutput['list'][number]
 };
 
-const PlayersListRow: React.FC<PlayersListRowProps> = ({ player }) => {
+const PlayerListRow: React.FC<PlayersListRowProps> = ({ player }) => {
     const [edit, setEdit] = React.useState(false);
 
     if (edit) {

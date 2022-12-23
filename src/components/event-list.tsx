@@ -12,7 +12,7 @@ import MatchRemoveButton from './match-remove-button';
 import EventRemoveButton from './event-remove-button';
 import EventCreateForm from './event-create-form';
 
-const EventsList: React.FC = () => {
+const EventList: React.FC = () => {
     const query = trpc.events.list.useQuery();
     const { data: sessionData } = useSession();
 
@@ -41,7 +41,7 @@ const EventsList: React.FC = () => {
     );
 };
 
-export default EventsList;
+export default EventList;
 
 type EventProps = {
     defaultOpen: boolean
