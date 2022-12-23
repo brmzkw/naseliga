@@ -8,6 +8,7 @@ const LeaderboardUpdateButton: React.FC = () => {
     const mutation = trpc.leaderboard.update.useMutation({
         onSuccess: () => {
             utils.leaderboard.invalidate();
+            utils.events.invalidate();
         },
     });
     return (

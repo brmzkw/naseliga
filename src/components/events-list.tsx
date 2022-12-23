@@ -203,12 +203,28 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                             <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
                                 <PlayerName player={match.playerA} />
                             </td>
-                            <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>{match.scoreA}</td>
+                            <td className={`${match.scoreA > match.scoreB ? 'font-bold' : ''}`}>
+                                {match.scoreA}
+                                {match.ranking && (
+                                    <>
+                                        &nbsp;
+                                        <small className="text-xs font-normal">({match.ranking?.rankA})</small>
+                                    </>
+                                )}
+                            </td>
 
                             <td className={`${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
                                 <PlayerName player={match.playerB} />
                             </td>
-                            <td className={`${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>{match.scoreB}</td>
+                            <td className={`${match.scoreB > match.scoreA ? 'font-bold' : ''}`}>
+                                {match.scoreB}
+                                {match.ranking && (
+                                    <>
+                                        &nbsp;
+                                        <small className="text-xs font-normal">({match.ranking?.rankB})</small>
+                                    </>
+                                )}
+                            </td>
 
                             {sessionData?.user?.isAdmin &&
                                 <td>

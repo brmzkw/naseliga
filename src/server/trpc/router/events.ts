@@ -16,7 +16,8 @@ export const eventsRouter = router({
                     include: {
                         playerA: true,
                         playerB: true,
-                    }
+                        ranking: true,
+                    },
                 },
             },
             orderBy: {
