@@ -208,7 +208,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                                 {match.ranking && (
                                     <>
                                         &nbsp;
-                                        <small className="text-xs font-normal">({match.ranking.rankA > 0 ? `+${match.ranking.rankA}` : match.ranking.rankA})</small>
+                                        <small className="text-xs font-normal">({match.ranking.rankA >= 0 ? `+${match.ranking.rankA}` : match.ranking.rankA})</small>
                                     </>
                                 )}
                             </td>
@@ -221,7 +221,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
                                 {match.ranking && (
                                     <>
                                         &nbsp;
-                                        <small className="text-xs font-normal">({match.ranking.rankB > 0 ? `+${match.ranking.rankB}` : match.ranking.rankB})</small>
+                                        <small className="text-xs font-normal">({match.ranking.rankB >= 0 ? `+${match.ranking.rankB}` : match.ranking.rankB})</small>
                                     </>
                                 )}
                             </td>
