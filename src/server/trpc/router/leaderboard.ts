@@ -33,7 +33,7 @@ export const leaderboardRouter = router({
                         subq.player_id AS id,
                         subq.player_name AS name,
                         subq.player_country AS country,
-                        1500 + SUM(subq.score) :: INT AS score
+                        (1500 + SUM(subq.score)):: INT AS score
                     FROM (
                         SELECT
                             players.id AS player_id
@@ -67,14 +67,19 @@ export const leaderboardRouter = router({
                     ) subq
 
                     JOIN (
-                        SELECT players.id AS player_id
-                        FROM players
+                        SELECT
+                            players.id AS player_id
+                        FROM
+                            players
                         JOIN matches
-                        ON matches.player_a = players.id OR matches.player_b = players.id
+                            ON matches.player_a = players.id
+                            OR matches.player_b = players.id
                         JOIN events
-                        ON events.id = matches.event
-                        WHERE events.date >= ${input.after}
-                        GROUP BY players.id
+                            ON events.id = matches.event
+                        WHERE
+                            events.date >= ${input.after}
+                        GROUP BY
+                            players.id
                     ) subq2
                     ON subq2.player_id = subq.player_id
 
