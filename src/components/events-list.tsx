@@ -1,16 +1,16 @@
 import React from 'react';
 
 import { useSession } from 'next-auth/react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import type { EventsRouterOutput, EventsRouterInput, eventsRouter } from '../server/trpc/router/events';
 import { AddButton, RemoveButton } from './buttons';
 import { trpc } from '../utils/trpc';
-import PlayerSelect from './player-select';
 import PlayerName from './player-name';
 import LoadingSpinner from './loading-spinner';
 import type { inferRouterOutputs } from '@trpc/server';
+import MatchCreateForm from './match-create-form';
 
 const EventsList: React.FC = () => {
     const query = trpc.events.list.useQuery();
@@ -238,119 +238,12 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
 
             {sessionData?.user?.isAdmin &&
                 <div className="mt-4">
-                    <NewMatch event={event} />
+                    <hr />
+                    <h4 className="text-xl text-center text-bold">Add a new match</h4>
+                    <MatchCreateForm event={event} />
+                    <hr />
                 </div>
             }
         </div>
-    );
-};
-
-type NewMatchProps = MatchListProps;
-
-type NewMatchForm = {
-    scoreA: string;
-    scoreB: string;
-    playerA: {
-        id: number;
-        name: string;
-        country: string;
-    },
-    playerB: {
-        id: number;
-        name: string;
-        country: string;
-    },
-};
-
-const NewMatch: React.FC<NewMatchProps> = ({ event }) => {
-    const { control, register, handleSubmit } = useForm<NewMatchForm>({
-        defaultValues: {
-            scoreA: "0",
-            scoreB: "0",
-        }
-    });
-
-    const utils = trpc.useContext();
-
-    const mutation = trpc.events.createMatch.useMutation({
-        onSuccess: () => {
-            utils.events.invalidate();
-            toast.success("Match created 🎉");
-        },
-    });
-
-    const onSubmit = (data: NewMatchForm) => {
-        mutation.mutate({
-            eventId: event.id,
-            playerAId: data.playerA.id,
-            scoreA: parseInt(data.scoreA, 10),
-            playerBId: data.playerB.id,
-            scoreB: parseInt(data.scoreB, 10),
-        });
-    };
-
-    return (
-        <>
-            <hr />
-            <h4 className="text-xl text-center text-bold">Add a new match</h4>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex justify-around pt-4 pb-4">
-                <div className="flex flex-col items-center justify-center gap-4">
-                    <div>
-                        <Controller
-                            name="playerA"
-                            control={control}
-                            render={
-                                ({ field }) =>
-                                    <PlayerSelect
-                                        {...field}
-                                        placeholder="First player"
-                                        required
-                                    />
-                            }
-                        />
-                    </div>
-                    <div>
-                        <input
-                            className="border border-gray-300 p-2 w-full"
-                            type="number"
-                            min="0"
-                            placeholder="First score"
-                            required
-                            {...register("scoreA")}
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col items-center justify-center gap-4">
-                    <AddButton disabled={mutation.isLoading} type="submit" />
-                </div>
-                <div className="flex flex-col items-center justify-center gap-4">
-                    <div>
-                        <Controller
-                            name="playerB"
-                            control={control}
-                            render={
-                                ({ field }) =>
-                                    <PlayerSelect
-                                        {...field}
-                                        placeholder="Second player"
-                                        required
-                                    />
-                            }
-                        />
-                    </div>
-                    <div>
-                        <input
-                            className="border border-gray-300 p-2 w-full"
-                            type="number"
-                            min="0"
-                            placeholder="Second score"
-                            required
-                            {...register("scoreB")}
-                        />
-                    </div>
-                </div>
-            </form>
-            <hr />
-        </>
     );
 };
