@@ -93,20 +93,24 @@ export const leaderboardRouter = router({
                         match.playerBId, match.scoreB
                     );
 
-                    await ctx.prisma.ranking.upsert({
-                        where: {
-                            matchId: match.id,
-                        },
-                        update: {
-                            rankA: newRankA,
-                            rankB: newRankB,
-                        },
-                        create: {
-                            matchId: match.id,
-                            rankA: newRankA,
-                            rankB: newRankB,
-                        },
-                    });
+                    try {
+                        await ctx.prisma.ranking.create({
+                            data: {
+                                matchId: match.id,
+                                rankA: newRankA,
+                                rankB: newRankB,
+                            }
+                        });
+                    } catch (e) {
+                        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                            // Unique constraint failed
+                            if (e.code == 'P2002') {
+                                console.log(`Oops, ranking already existed for match ${match.id}`);
+                                continue;
+                            }
+                        }
+                        throw e;
+                    }
                 }
             }
         }),
