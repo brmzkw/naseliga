@@ -21,7 +21,7 @@ export const leaderboardRouter = router({
         }).default(() => {
             const after = new Date();
             // three months ago
-            after.setMonth(after.getMonth() - 2);
+            after.setMonth(after.getMonth() - 3);
             return ({
                 after,
             })
@@ -29,50 +29,62 @@ export const leaderboardRouter = router({
         .query(async ({ ctx, input }) => {
             const leaderboard = await ctx.prisma.$queryRaw<PlayerWithScore[]>(
                 Prisma.sql`
-                SELECT
-                    *
-                FROM (
                     SELECT
-                        DISTINCT ON (player) id,
-                        players.country,
-                        players.name,
-                        score
+                        subq.player_id AS id,
+                        subq.player_name AS name,
+                        subq.player_country AS country,
+                        1500 + SUM(subq.score) :: INT AS score
                     FROM (
                         SELECT
-                            players.id player
-                            , matches.id match
-                            , rankings.rank_a score
-                        FROM rankings
+                            players.id AS player_id
+                            , players.name AS player_name
+                            , players.country AS player_country
+                            , rankings.rank_a AS score
+                        FROM
+                            rankings
                         JOIN matches
-                            ON rankings.match = matches.id
+                            ON matches.id = rankings.match
                         JOIN events
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_a
-                        WHERE
-                            events.date >= ${input.after}
 
                         UNION
 
                         SELECT
-                            players.id player
-                            , matches.id match
-                            , rankings.rank_b score
-                        FROM rankings
+                            players.id AS player_id
+                            , players.name AS player_name
+                            , players.country AS player_country
+                            , rankings.rank_b AS score
+                        FROM
+                            rankings
                         JOIN matches
-                            ON rankings.match = matches.id
+                            ON matches.id = rankings.match
                         JOIN events
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_b
-                        WHERE
-                            events.date >= ${input.after}
                     ) subq
-                    JOIN players
-                        ON players.id = subq.player
-                    ORDER BY player, match DESC
-                ) subq ORDER BY score DESC
-        `);
+
+                    JOIN (
+                        SELECT players.id AS player_id
+                        FROM players
+                        JOIN matches
+                        ON matches.player_a = players.id OR matches.player_b = players.id
+                        JOIN events
+                        ON events.id = matches.event
+                        WHERE events.date >= ${input.after}
+                        GROUP BY players.id
+                    ) subq2
+                    ON subq2.player_id = subq.player_id
+
+                    GROUP BY
+                        subq.player_id,
+                        subq.player_name,
+                        subq.player_country
+                    ORDER BY
+                        SUM(subq.score) DESC
+                `);
             return {
                 leaderboard,
             };
@@ -83,34 +95,31 @@ export const leaderboardRouter = router({
             if (!ctx.session?.user?.isAdmin) {
                 throw new Error('Not authorized');
             }
+
             const events = await listUnrankedEvents(ctx.prisma);
+            console.log(`Updating rankings for ${events.length} events...`);
 
             for (const event of events) {
                 for (const match of event.matches) {
-                    const [newRankA, newRankB] = await getNewRankings(
+                    const [newRankA, newRankB] = await getMatchRanking(
                         ctx.prisma,
-                        match.playerAId, match.scoreA,
-                        match.playerBId, match.scoreB
+                        match
                     );
 
-                    try {
-                        await ctx.prisma.ranking.create({
-                            data: {
-                                matchId: match.id,
-                                rankA: newRankA,
-                                rankB: newRankB,
-                            }
-                        });
-                    } catch (e) {
-                        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-                            // Unique constraint failed
-                            if (e.code == 'P2002') {
-                                console.log(`Oops, ranking already existed for match ${match.id}`);
-                                continue;
-                            }
-                        }
-                        throw e;
-                    }
+                    await ctx.prisma.ranking.upsert({
+                        where: {
+                            matchId: match.id,
+                        },
+                        update: {
+                            rankA: newRankA,
+                            rankB: newRankB,
+                        },
+                        create: {
+                            matchId: match.id,
+                            rankA: newRankA,
+                            rankB: newRankB,
+                        },
+                    });
                 }
             }
         }),
@@ -148,54 +157,6 @@ function computeNewScores(
 }
 
 /*
- * Return the latest ranking of a player.
- */
-export async function getPlayerRanking(
-    prisma: PrismaClient,
-    playerId: number
-) {
-    const match = await prisma.match.findFirst({
-        where: {
-            OR: [
-                { playerAId: playerId },
-                { playerBId: playerId },
-            ],
-            NOT: { ranking: null },
-        },
-        include: {
-            ranking: true,
-        },
-        orderBy: {
-            id: 'desc',
-        },
-    });
-
-    if (!match?.ranking) {
-        return 1500;
-    }
-    return match.playerAId === playerId ? match.ranking.rankA : match.ranking.rankB;
-}
-
-/*
- * Given two players and their scores, return the new rankings of each player.
- */
-async function getNewRankings(
-    prisma: PrismaClient,
-    playerAId: number,
-    scoreA: number,
-    playerBId: number,
-    scoreB: number
-): Promise<[number, number]> {
-    const rankA = await getPlayerRanking(prisma, playerAId);
-    const rankB = await getPlayerRanking(prisma, playerBId);
-
-    const [newRankA, newRankB] = computeNewScores(
-        rankA, rankB, scoreA, scoreA + scoreB
-    );
-    return [newRankA, newRankB];
-}
-
-/*
  * List events with as least one unranked match.
  */
 export async function listUnrankedEvents(prisma: PrismaClient) {
@@ -219,4 +180,84 @@ export async function listUnrankedEvents(prisma: PrismaClient) {
             id: 'asc',
         },
     });
+}
+
+/*
+ * For a given match, return the previous ranking of both players.
+ */
+async function getPreviousMatchRanking(
+    prisma: PrismaClient,
+    match: Awaited<ReturnType<typeof listUnrankedEvents>>[number]['matches'][number]
+): Promise<[number, number]> {
+    const currentLeaderboardResult = await prisma.$queryRaw<{
+        id: number;
+        score: number;
+    }[]>(
+        Prisma.sql`
+    SELECT
+        player_id AS id,
+        SUM(score) :: INT AS score
+    FROM (
+        SELECT
+            players.id AS player_id
+            , rankings.rank_a AS score
+        FROM
+            rankings
+        JOIN matches
+        ON matches.id = rankings.match
+        JOIN players
+        ON players.id = matches.player_a
+        WHERE
+            matches.id < ${match.id}
+
+        UNION
+
+        SELECT
+            players.id AS player_id
+            , rankings.rank_b AS score
+        FROM
+            rankings
+        JOIN matches
+        ON matches.id = rankings.match
+        JOIN players
+        ON players.id = matches.player_b
+        WHERE
+            matches.id < ${match.id}
+    ) subq
+
+    GROUP BY
+        player_id
+    ORDER BY
+        score DESC
+`);
+
+    const currentLeaderboard = Object.fromEntries(
+        currentLeaderboardResult.map((entry) => [entry.id, entry.score])
+    );
+
+    return [
+        currentLeaderboard[match.playerA.id] || 0,
+        currentLeaderboard[match.playerB.id] || 0
+    ];
+}
+
+/*
+ * Return the new ranking of both players for a given match.
+ */
+async function getMatchRanking(
+    prisma: PrismaClient,
+    match: Awaited<ReturnType<typeof listUnrankedEvents>>[number]['matches'][number]
+): Promise<[number, number]> {
+    const currentRankings = await getPreviousMatchRanking(prisma, match);
+    const newScores = computeNewScores(
+        currentRankings[0],
+        currentRankings[1],
+        match.scoreA,
+        match.scoreA + match.scoreB
+    );
+
+    return [
+        newScores[0] - currentRankings[0],
+        newScores[1] - currentRankings[1]
+    ];
 }

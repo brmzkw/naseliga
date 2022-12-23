@@ -22,7 +22,7 @@ const Leaderboard: React.FC = () => {
                 <thead>
                     <tr className="bg-red-300 text-center text-slate-700 font-bold">
                         <td colSpan={4} className="p-2">
-                            The leaderboard is broken, I am m working on a fix — Julien
+                            The leaderboard is broken, I am working on a fix - Julien
                         </td>
                     </tr>
                 </thead>
