@@ -29,7 +29,7 @@ const LeaderboardUpdateButtonView: React.FC<LeaderboardUpdateButtonViewProps> = 
     const doClick = () => {
         onClick()
             .then(() => toast.success("Hoora! Leaderboard updated :))"))
-            .catch(() => toast.error("Something went wrong :("));
+            .catch(() => toast.error("Oops... Something went wrong. Try to update again a few times. If the error persists, please contact Julien."));
     };
 
     return (
