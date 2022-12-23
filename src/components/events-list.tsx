@@ -11,6 +11,7 @@ import PlayerName from './player-name';
 import LoadingSpinner from './loading-spinner';
 import type { inferRouterOutputs } from '@trpc/server';
 import MatchCreateForm from './match-create-form';
+import MatchRemoveButton from './match-remove-button';
 
 const EventsList: React.FC = () => {
     const query = trpc.events.list.useQuery();
@@ -182,18 +183,6 @@ type MatchListProps = {
 
 const MatchList: React.FC<MatchListProps> = ({ event }) => {
     const { data: sessionData } = useSession();
-    const utils = trpc.useContext();
-
-    const mutation = trpc.events.deleteMatch.useMutation({
-        onSuccess: () => {
-            utils.events.invalidate();
-            toast.success("Match deleted 💫");
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        },
-    });
-
     return (
         <div>
             <table className="m-auto">
@@ -228,7 +217,7 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
 
                             {sessionData?.user?.isAdmin &&
                                 <td>
-                                    <RemoveButton disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: match.id })} />
+                                    <MatchRemoveButton match={match} />
                                 </td>
                             }
                         </tr>
