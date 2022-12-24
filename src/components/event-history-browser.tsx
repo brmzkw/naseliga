@@ -1,6 +1,7 @@
 import React from "react";
 import type { EventsRouterOutput } from "../server/trpc/router/events";
 import { trpc } from "../utils/trpc";
+import LoadingSpinner from "./loading-spinner";
 
 export type Event = EventsRouterOutput["list"][number];
 export type NullableEvent = Event | null;
@@ -30,6 +31,10 @@ const EventHistoryBrowser: React.FC<EventHistoryBrowserProps> = ({
     const nextEvent = query.data?.[currentIdx - 1];
 
     const WrappedChildren = getWrappedChildren(selectedEvent);
+
+    if (!query.data) {
+        return <LoadingSpinner text="Loading events..." />;
+    }
 
     return (
         <div>
