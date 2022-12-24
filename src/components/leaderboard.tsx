@@ -12,12 +12,13 @@ const Leaderboard: React.FC = () => {
     return (
         <EventHistoryBrowser
             getTitle={(event, isLatest) => {
+                const eventDate = `${event.date.toLocaleString('default', { month: 'short' })} ${event.date.toLocaleString('default', { day: 'numeric' })}`;
+                const eventName = `${eventDate}${event.title ? ` (${event.title.trim()})` : ''}`;
+
                 if (isLatest) {
-                    return <strong>Current leaderboard</strong>;
+                    return <strong>Current leaderboard, after {eventName}</strong>;
                 }
-                return <strong>
-                    Leaderboard after {event.date.toLocaleString('default', { month: 'short' })} {event.date.toLocaleString('default', { day: 'numeric' })} {event.title && <>({event.title.trim()})</>}
-                </strong>;
+                return <strong>Leaderboard after {eventName} </strong>;
             }}
             getWrappedChildren={(event) => <LeaderboardContent event={event} />}
         />
