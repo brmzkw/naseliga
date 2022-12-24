@@ -1,4 +1,5 @@
 import { Prisma, type PrismaClient } from '@prisma/client'
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { router, publicProcedure } from "../trpc";
@@ -15,20 +16,43 @@ type Player = Prisma.PlayerGetPayload<typeof playerData>
 export type PlayerWithScore = Player & { score: number }
 
 export const leaderboardRouter = router({
+    // Generate the leaderboard
+    /**
+     * @param includeInactivePlayers Whether to include players that have not played in the last 3 months.
+     * @param eventId If set, the leaderboard will be generated as of the date of the event with this ID.
+     */
     get: publicProcedure
         .input(z.object({
-            after: z.date()
-        }).default(() => {
-            const after = new Date();
-            // three months ago
-            after.setMonth(after.getMonth() - 3);
-            return ({
-                after,
-            })
+            includeInactivePlayers: z.boolean().default(false),
+            eventId: z.number().nullable().default(null),
         }))
         .query(async ({ ctx, input }) => {
-            const leaderboard = await ctx.prisma.$queryRaw<PlayerWithScore[]>(
-                Prisma.sql`
+            let event = null;
+
+            if (input.eventId !== null) {
+                event = await ctx.prisma.event.findFirst({
+                    where: {
+                        id: input.eventId,
+                    },
+                });
+                if (!event) {
+                    throw new TRPCError({
+                        code: 'NOT_FOUND',
+                        message: 'Event not found',
+                    });
+                }
+            }
+
+            // If includeInactivePlayers is false, filter out players that have
+            // not played 3 months before the event.
+            const activeAfter = input.includeInactivePlayers ?
+                null
+                : event ? event.date : new Date();
+
+            activeAfter?.setMonth(activeAfter.getMonth() - 3);
+
+            const leaderboard = await ctx.prisma.$queryRawUnsafe<PlayerWithScore[]>(
+                `
                     SELECT
                         subq.player_id AS id,
                         subq.player_name AS name,
@@ -48,6 +72,7 @@ export const leaderboardRouter = router({
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_a
+                        WHERE ${event ? `events.id <= ${event.id}` : '1=1'}
 
                         UNION
 
@@ -64,6 +89,7 @@ export const leaderboardRouter = router({
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_b
+                        WHERE ${event ? `events.id <= ${event.id}` : '1=1'}
                     ) subq
 
                     JOIN (
@@ -77,7 +103,7 @@ export const leaderboardRouter = router({
                         JOIN events
                             ON events.id = matches.event
                         WHERE
-                            events.date >= ${input.after}
+                            ${activeAfter ? `events.date >= '${activeAfter.toISOString()}'` : '1=1'}
                         GROUP BY
                             players.id
                     ) subq2

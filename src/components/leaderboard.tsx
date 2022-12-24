@@ -6,10 +6,35 @@ import { trpc } from "../utils/trpc";
 import PlayerName from "./player-name";
 import LeaderboardUpdateButton from "./leaderboard-update-button";
 import LoadingSpinner from "./loading-spinner";
+import EventHistoryBrowser, { type NullableEvent } from "./event-history-browser";
 
 const Leaderboard: React.FC = () => {
+    return (
+        <EventHistoryBrowser
+            getTitle={(event, isLatest) => {
+                if (isLatest) {
+                    return <strong>Current leaderboard</strong>;
+                }
+                return <strong>
+                    Leaderboard after {event.date.toLocaleString('default', { month: 'short' })} {event.date.toLocaleString('default', { day: 'numeric' })} {event.title && <>({event.title.trim()})</>}
+                </strong>;
+            }}
+            getWrappedChildren={(event) => <LeaderboardContent event={event} />}
+        />
+    );
+};
+
+export default Leaderboard;
+
+type LeaderboardContentProps = {
+    event: NullableEvent;
+};
+
+const LeaderboardContent: React.FC<LeaderboardContentProps> = ({ event }) => {
     const { data: sessionData } = useSession();
-    const query = trpc.leaderboard.get.useQuery();
+    const query = trpc.leaderboard.get.useQuery({
+        eventId: event?.id,
+    });
 
     if (!query.data) {
         return <LoadingSpinner text="Loading leaderboard..." />;
@@ -19,13 +44,6 @@ const Leaderboard: React.FC = () => {
         <div className="flex flex-col items-center">
             {sessionData?.user?.isAdmin && <LeaderboardUpdateButton />}
             <table className="table-auto w-full">
-                {/* <thead>
-                    <tr className="bg-red-300 text-center text-slate-700 font-bold">
-                        <td colSpan={4} className="p-2">
-                            The leaderboard is broken, I am working on a fix - Julien
-                        </td>
-                    </tr>
-                </thead> */}
                 <tbody>
                     {query.data.leaderboard.map((entry, idx) =>
                         <tr key={entry.id} className="border-b border-gray-300">
@@ -41,5 +59,3 @@ const Leaderboard: React.FC = () => {
         </div>
     );
 };
-
-export default Leaderboard;
