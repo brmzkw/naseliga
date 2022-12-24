@@ -16,9 +16,9 @@ const Leaderboard: React.FC = () => {
                 const eventName = `${eventDate}${event.title ? ` (${event.title.trim()})` : ''}`;
 
                 if (isLatest) {
-                    return <strong>Current leaderboard, after {eventName}</strong>;
+                    return <strong>Current leaderboard</strong>;
                 }
-                return <strong>Leaderboard after {eventName} </strong>;
+                return <strong>Leaderboard on {eventName} </strong>;
             }}
             getWrappedChildren={(event) => <LeaderboardContent event={event} />}
         />
