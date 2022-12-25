@@ -14,7 +14,7 @@ const EventList: React.FC = () => {
     const query = trpc.events.list.useQuery();
     const { data: sessionData } = useSession();
 
-    if (!query.data) {
+    if (query.isLoading) {
         return <LoadingSpinner text="Loading events..." />;
     }
 
@@ -29,7 +29,7 @@ const EventList: React.FC = () => {
 
             <h2 className="font-bold text-xl">Last events</h2>
             <ul>
-                {query.data.map((event, idx) =>
+                {query.data?.map((event, idx) =>
                     <li key={event.id} className="[&:not(:first-child)]:mt-4">
                         <Event defaultOpen={idx == 0} event={event} />
                     </li>

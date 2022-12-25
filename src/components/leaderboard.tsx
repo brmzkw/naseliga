@@ -37,7 +37,7 @@ const LeaderboardContent: React.FC<LeaderboardContentProps> = ({ event }) => {
         eventId: event?.id,
     });
 
-    if (!query.data) {
+    if (query.isLoading) {
         return <LoadingSpinner text="Loading leaderboard..." />;
     }
 
@@ -46,7 +46,7 @@ const LeaderboardContent: React.FC<LeaderboardContentProps> = ({ event }) => {
             {sessionData?.user?.isAdmin && <LeaderboardUpdateButton />}
             <table className="table-auto w-full">
                 <tbody>
-                    {query.data.leaderboard.map((entry, idx) =>
+                    {query.data?.leaderboard.map((entry, idx) =>
                         <tr key={entry.id} className="border-b border-gray-300">
                             <td className="p-3">#{idx + 1}</td>
                             <td className="p-3 flex items-center">

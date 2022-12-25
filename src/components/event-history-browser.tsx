@@ -32,7 +32,7 @@ const EventHistoryBrowser: React.FC<EventHistoryBrowserProps> = ({
 
     const WrappedChildren = getWrappedChildren(selectedEvent);
 
-    if (!query.data) {
+    if (query.isLoading) {
         return <LoadingSpinner text="Loading events..." />;
     }
 
