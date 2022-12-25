@@ -1,4 +1,5 @@
 import React, { type PropsWithChildren } from "react";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -52,6 +53,8 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
             <main className="min-h-screen flex flex-col sm:flex-row">
                 {children}
             </main>
+
+            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         </>
     );
 }
