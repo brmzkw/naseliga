@@ -32,9 +32,11 @@ type LeaderboardContentProps = {
 };
 
 const LeaderboardContent: React.FC<LeaderboardContentProps> = ({ event }) => {
+    const [includeInactivePlayers, setIncludeInactive] = React.useState(false);
     const { data: sessionData } = useSession();
     const query = trpc.leaderboard.get.useQuery({
         eventId: event?.id,
+        includeInactivePlayers,
     });
 
     if (query.isLoading) {
@@ -57,6 +59,11 @@ const LeaderboardContent: React.FC<LeaderboardContentProps> = ({ event }) => {
                     )}
                 </tbody>
             </table>
-        </div>
+            <div className="self-end text-xs p-2 bg-slate-700 rounded-xl mt-2 text-white hover:bg-slate-500">
+                <button onClick={() => setIncludeInactive((val) => !val)}>
+                    {includeInactivePlayers ? "Hide inactive players" : "Show inactive players"}
+                </button>
+            </div>
+        </div >
     );
 };
