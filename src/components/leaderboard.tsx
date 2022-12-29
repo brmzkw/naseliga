@@ -6,7 +6,7 @@ import { trpc } from "../utils/trpc";
 import PlayerName from "./player-name";
 import LeaderboardUpdateButton from "./leaderboard-update-button";
 import LoadingSpinner from "./loading-spinner";
-import { EventsRouterOutput } from "../server/trpc/router/events";
+import type { EventsRouterOutput } from "../server/trpc/router/events";
 
 
 type Event = EventsRouterOutput["list"][number];
