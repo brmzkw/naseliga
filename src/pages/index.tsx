@@ -7,19 +7,17 @@ import Leaderboard from "../components/leaderboard";
 
 import BaseLayout from "../layouts/base";
 
-
 const HomePage: NextPage = () => {
-
   return (
     <BaseLayout>
-      <div className="flex-1 mt-2 p-2">
+      <div className="mt-2 flex-1 p-2">
         <Leaderboard />
       </div>
-      <div className="flex-1 mt-5 sm:mt-2 ml-2 h-[150vh] overflow-scroll">
+      <div className="mt-5 ml-2 h-[150vh] flex-1 overflow-scroll sm:mt-2">
         <EventList />
       </div>
     </BaseLayout>
   );
-}
+};
 
 export default HomePage;

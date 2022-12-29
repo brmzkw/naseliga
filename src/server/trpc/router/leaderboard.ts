@@ -1,58 +1,62 @@
-import { Prisma, type PrismaClient } from '@prisma/client'
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
+import { Prisma, type PrismaClient } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { router, publicProcedure } from "../trpc";
 
 const playerData = Prisma.validator<Prisma.PlayerArgs>()({
-    select: {
-        id: true,
-        name: true,
-        country: true,
-    }
+  select: {
+    id: true,
+    name: true,
+    country: true,
+  },
 });
 
-type Player = Prisma.PlayerGetPayload<typeof playerData>
-export type PlayerWithScore = Player & { score: number }
+type Player = Prisma.PlayerGetPayload<typeof playerData>;
+export type PlayerWithScore = Player & { score: number };
 
 export const leaderboardRouter = router({
-    // Generate the leaderboard
-    /**
-     * @param includeInactivePlayers Whether to include players that have not played in the last 3 months.
-     * @param eventId If set, the leaderboard will be generated as of the date of the event with this ID.
-     */
-    get: publicProcedure
-        .input(z.object({
-            includeInactivePlayers: z.boolean().default(false),
-            eventId: z.number().nullable().default(null),
-        }))
-        .query(async ({ ctx, input }) => {
-            let event = null;
+  // Generate the leaderboard
+  /**
+   * @param includeInactivePlayers Whether to include players that have not played in the last 3 months.
+   * @param eventId If set, the leaderboard will be generated as of the date of the event with this ID.
+   */
+  get: publicProcedure
+    .input(
+      z.object({
+        includeInactivePlayers: z.boolean().default(false),
+        eventId: z.number().nullable().default(null),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let event = null;
 
-            if (input.eventId !== null) {
-                event = await ctx.prisma.event.findFirst({
-                    where: {
-                        id: input.eventId,
-                    },
-                });
-                if (!event) {
-                    throw new TRPCError({
-                        code: 'NOT_FOUND',
-                        message: 'Event not found',
-                    });
-                }
-            }
+      if (input.eventId !== null) {
+        event = await ctx.prisma.event.findFirst({
+          where: {
+            id: input.eventId,
+          },
+        });
+        if (!event) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Event not found",
+          });
+        }
+      }
 
-            // If includeInactivePlayers is false, filter out players that have
-            // not played 3 months before the event.
-            const activeAfter = input.includeInactivePlayers ?
-                null
-                : event ? event.date : new Date();
+      // If includeInactivePlayers is false, filter out players that have
+      // not played 3 months before the event.
+      const activeAfter = input.includeInactivePlayers
+        ? null
+        : event
+        ? event.date
+        : new Date();
 
-            activeAfter?.setMonth(activeAfter.getMonth() - 3);
+      activeAfter?.setMonth(activeAfter.getMonth() - 3);
 
-            const leaderboard = await ctx.prisma.$queryRawUnsafe<PlayerWithScore[]>(
-                `
+      const leaderboard = await ctx.prisma.$queryRawUnsafe<PlayerWithScore[]>(
+        `
                     SELECT
                         subq.player_id AS id,
                         subq.player_name AS name,
@@ -72,7 +76,7 @@ export const leaderboardRouter = router({
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_a
-                        WHERE ${event ? `events.id <= ${event.id}` : '1=1'}
+                        WHERE ${event ? `events.id <= ${event.id}` : "1=1"}
 
                         UNION
 
@@ -89,7 +93,7 @@ export const leaderboardRouter = router({
                             ON events.id = matches.event
                         JOIN players
                             ON players.id = matches.player_b
-                        WHERE ${event ? `events.id <= ${event.id}` : '1=1'}
+                        WHERE ${event ? `events.id <= ${event.id}` : "1=1"}
                     ) subq
 
                     JOIN (
@@ -103,7 +107,11 @@ export const leaderboardRouter = router({
                         JOIN events
                             ON events.id = matches.event
                         WHERE
-                            ${activeAfter ? `events.date >= '${activeAfter.toISOString()}'` : '1=1'}
+                            ${
+                              activeAfter
+                                ? `events.date >= '${activeAfter.toISOString()}'`
+                                : "1=1"
+                            }
                         GROUP BY
                             players.id
                     ) subq2
@@ -115,45 +123,42 @@ export const leaderboardRouter = router({
                         subq.player_country
                     ORDER BY
                         SUM(subq.score) DESC
-                `);
-            return {
-                leaderboard,
-            };
-        }),
+                `
+      );
+      return {
+        leaderboard,
+      };
+    }),
 
-    update: publicProcedure
-        .mutation(async ({ ctx }) => {
-            if (!ctx.session?.user?.isAdmin) {
-                throw new Error('Not authorized');
-            }
+  update: publicProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session?.user?.isAdmin) {
+      throw new Error("Not authorized");
+    }
 
-            const events = await listUnrankedEvents(ctx.prisma);
-            console.log(`Updating rankings for ${events.length} events...`);
+    const events = await listUnrankedEvents(ctx.prisma);
+    console.log(`Updating rankings for ${events.length} events...`);
 
-            for (const event of events) {
-                for (const match of event.matches) {
-                    const [newRankA, newRankB] = await getMatchRanking(
-                        ctx.prisma,
-                        match
-                    );
+    for (const event of events) {
+      for (const match of event.matches) {
+        const [newRankA, newRankB] = await getMatchRanking(ctx.prisma, match);
 
-                    await ctx.prisma.ranking.upsert({
-                        where: {
-                            matchId: match.id,
-                        },
-                        update: {
-                            rankA: newRankA,
-                            rankB: newRankB,
-                        },
-                        create: {
-                            matchId: match.id,
-                            rankA: newRankA,
-                            rankB: newRankB,
-                        },
-                    });
-                }
-            }
-        }),
+        await ctx.prisma.ranking.upsert({
+          where: {
+            matchId: match.id,
+          },
+          update: {
+            rankA: newRankA,
+            rankB: newRankB,
+          },
+          create: {
+            matchId: match.id,
+            rankA: newRankA,
+            rankB: newRankB,
+          },
+        });
+      }
+    }
+  }),
 });
 
 /*
@@ -163,68 +168,72 @@ export const leaderboardRouter = router({
  * https://en.wikipedia.org/wiki/Elo_rating_system
  */
 function computeNewScores(
-    scoreA: number,
-    scoreB: number,
-    roundsA: number,
-    totalRounds: number
+  scoreA: number,
+  scoreB: number,
+  roundsA: number,
+  totalRounds: number
 ): [number, number] {
-    if (!totalRounds) {
-        return [scoreA, scoreB];
-    }
+  if (!totalRounds) {
+    return [scoreA, scoreB];
+  }
 
-    const qa = Math.pow(10, scoreA / 400);
-    const qb = Math.pow(10, scoreB / 400);
+  const qa = Math.pow(10, scoreA / 400);
+  const qb = Math.pow(10, scoreB / 400);
 
-    const expectedAOnB = qa / (qa + qb)
-    const expectedBOnA = 1 - expectedAOnB
+  const expectedAOnB = qa / (qa + qb);
+  const expectedBOnA = 1 - expectedAOnB;
 
-    const percentWinA = roundsA * 100 / totalRounds
-    const percentWinB = 100 - percentWinA
+  const percentWinA = (roundsA * 100) / totalRounds;
+  const percentWinB = 100 - percentWinA;
 
-    const newA = scoreA + (percentWinA - expectedAOnB * 100)
-    const newB = scoreB + (percentWinB - expectedBOnA * 100)
+  const newA = scoreA + (percentWinA - expectedAOnB * 100);
+  const newB = scoreB + (percentWinB - expectedBOnA * 100);
 
-    return [Math.round(newA), Math.round(newB)];
+  return [Math.round(newA), Math.round(newB)];
 }
 
 /*
  * List events with as least one unranked match.
  */
 export async function listUnrankedEvents(prisma: PrismaClient) {
-    return prisma.event.findMany({
+  return prisma.event.findMany({
+    include: {
+      matches: {
         include: {
-            matches: {
-                include: {
-                    playerA: true,
-                    playerB: true,
-                }
-            },
+          playerA: true,
+          playerB: true,
         },
-        where: {
-            matches: {
-                some: {
-                    ranking: null,
-                }
-            },
+      },
+    },
+    where: {
+      matches: {
+        some: {
+          ranking: null,
         },
-        orderBy: {
-            id: 'asc',
-        },
-    });
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
 }
 
 /*
  * For a given match, return the previous ranking of both players.
  */
 async function getPreviousMatchRanking(
-    prisma: PrismaClient,
-    match: Awaited<ReturnType<typeof listUnrankedEvents>>[number]['matches'][number]
+  prisma: PrismaClient,
+  match: Awaited<
+    ReturnType<typeof listUnrankedEvents>
+  >[number]["matches"][number]
 ): Promise<[number, number]> {
-    const currentLeaderboardResult = await prisma.$queryRaw<{
-        id: number;
-        score: number;
-    }[]>(
-        Prisma.sql`
+  const currentLeaderboardResult = await prisma.$queryRaw<
+    {
+      id: number;
+      score: number;
+    }[]
+  >(
+    Prisma.sql`
     SELECT
         player_id AS id,
         SUM(score) :: INT AS score
@@ -260,35 +269,35 @@ async function getPreviousMatchRanking(
         player_id
     ORDER BY
         score DESC
-`);
+`
+  );
 
-    const currentLeaderboard = Object.fromEntries(
-        currentLeaderboardResult.map((entry) => [entry.id, entry.score])
-    );
+  const currentLeaderboard = Object.fromEntries(
+    currentLeaderboardResult.map((entry) => [entry.id, entry.score])
+  );
 
-    return [
-        currentLeaderboard[match.playerA.id] || 0,
-        currentLeaderboard[match.playerB.id] || 0
-    ];
+  return [
+    currentLeaderboard[match.playerA.id] || 0,
+    currentLeaderboard[match.playerB.id] || 0,
+  ];
 }
 
 /*
  * Return the new ranking of both players for a given match.
  */
 async function getMatchRanking(
-    prisma: PrismaClient,
-    match: Awaited<ReturnType<typeof listUnrankedEvents>>[number]['matches'][number]
+  prisma: PrismaClient,
+  match: Awaited<
+    ReturnType<typeof listUnrankedEvents>
+  >[number]["matches"][number]
 ): Promise<[number, number]> {
-    const currentRankings = await getPreviousMatchRanking(prisma, match);
-    const newScores = computeNewScores(
-        currentRankings[0],
-        currentRankings[1],
-        match.scoreA,
-        match.scoreA + match.scoreB
-    );
+  const currentRankings = await getPreviousMatchRanking(prisma, match);
+  const newScores = computeNewScores(
+    currentRankings[0],
+    currentRankings[1],
+    match.scoreA,
+    match.scoreA + match.scoreB
+  );
 
-    return [
-        newScores[0] - currentRankings[0],
-        newScores[1] - currentRankings[1]
-    ];
+  return [newScores[0] - currentRankings[0], newScores[1] - currentRankings[1]];
 }

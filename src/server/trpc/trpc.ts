@@ -9,7 +9,10 @@ const t = initTRPC.context<Context>().create({
   // By default, trpc sends the stack trace of the error to the client. Remove
   // these sensitive details before sending to the client.
   errorFormatter({ error, shape }) {
-    const safeMessage = error.code === "INTERNAL_SERVER_ERROR" ? "Internal server error" : shape.message;
+    const safeMessage =
+      error.code === "INTERNAL_SERVER_ERROR"
+        ? "Internal server error"
+        : shape.message;
     const { stack, path, ...safeData } = shape.data;
 
     return {
@@ -17,7 +20,7 @@ const t = initTRPC.context<Context>().create({
       message: safeMessage,
       data: {
         ...safeData,
-      }
+      },
     };
   },
 });
