@@ -6,23 +6,72 @@ import { trpc } from "../utils/trpc";
 import PlayerName from "./player-name";
 import LeaderboardUpdateButton from "./leaderboard-update-button";
 import LoadingSpinner from "./loading-spinner";
-import EventHistoryBrowser, { type NullableEvent } from "./event-history-browser";
+import { EventsRouterOutput } from "../server/trpc/router/events";
+
+
+type Event = EventsRouterOutput["list"][number];
+type NullableEvent = Event | null;
 
 const Leaderboard: React.FC = () => {
-    return (
-        <EventHistoryBrowser
-            getTitle={(event, isLatest) => {
-                const eventDate = `${event.date.toLocaleString('default', { month: 'short' })} ${event.date.toLocaleString('default', { day: 'numeric' })}`;
-                const eventName = `${eventDate}${event.title ? ` (${event.title.trim()})` : ''}`;
+    const query = trpc.events.list.useQuery();
 
-                if (isLatest) {
-                    return <strong>Current leaderboard</strong>;
-                }
-                return <strong>Leaderboard on {eventName} </strong>;
-            }}
-            getWrappedChildren={(event) => <LeaderboardContent event={event} />}
-        />
+    const [selectedEvent, setSelectedEvent] = React.useState<NullableEvent>(null);
+
+    const searchIdx = query.data?.findIndex((event) => event.id === selectedEvent?.id) ?? 0;
+    const currentIdx = searchIdx === -1 ? 0 : searchIdx;
+
+    const prevEvent = query.data?.[currentIdx + 1];
+    const currentEvent = query.data?.[currentIdx];
+    const nextEvent = query.data?.[currentIdx - 1];
+
+    if (query.isLoading) {
+        return <LoadingSpinner text="Loading events..." />;
+    }
+
+    return (
+        <div>
+            <div className="flex justify-around mb-2 p-2 shadow-md shadow-slate-900">
+                <div>
+                    {prevEvent && (
+                        <button onClick={() => setSelectedEvent(prevEvent)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+
+                        </button>
+                    )}
+                </div>
+                <div className="flex-1 text-center">
+                    {currentEvent && <Title event={currentEvent} isFirst={currentIdx === 0} />}
+                </div>
+                <div>
+                    {nextEvent &&
+                        <button onClick={() => setSelectedEvent(nextEvent)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
+                    }
+                </div>
+            </div>
+            <LeaderboardContent event={selectedEvent} />
+        </div >
     );
+};
+
+type TitleProps = {
+    event: Event;
+    isFirst: boolean;
+};
+
+const Title : React.FC<TitleProps> = ({ event, isFirst }) => {
+    const eventDate = `${event.date.toLocaleString('default', { month: 'short' })} ${event.date.toLocaleString('default', { day: 'numeric' })}`;
+    const eventName = `${eventDate}${event.title ? ` (${event.title.trim()})` : ''}`;
+
+    if (isFirst) {
+        return <strong>Current leaderboard</strong>;
+    }
+    return <strong>Leaderboard on {eventName} </strong>;
 };
 
 export default Leaderboard;
