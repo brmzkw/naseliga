@@ -10,7 +10,9 @@ type MatchRemoveButtonProps = {
   match: EventsRouterInput["deleteMatch"];
 };
 
-const MatchRemoveButton: React.FC<MatchRemoveButtonProps> = ({ match }) => {
+export const MatchRemoveButton: React.FC<MatchRemoveButtonProps> = ({
+  match,
+}) => {
   const utils = trpc.useContext();
 
   const mutation = trpc.events.deleteMatch.useMutation({
@@ -30,5 +32,3 @@ const MatchRemoveButton: React.FC<MatchRemoveButtonProps> = ({ match }) => {
     />
   );
 };
-
-export default MatchRemoveButton;

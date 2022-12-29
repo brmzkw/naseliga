@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const font = Caveat();
 
-const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
+export const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { data: sessionData } = useSession();
 
   return (
@@ -67,5 +67,3 @@ const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
     </>
   );
 };
-
-export default BaseLayout;

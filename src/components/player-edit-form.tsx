@@ -7,7 +7,7 @@ import type {
 } from "../server/trpc/router/players";
 import { SubmitButton } from "./buttons";
 import { trpc } from "../utils/trpc";
-import CountrySelect from "./country-select";
+import { CountrySelect } from "./country-select";
 
 type PlayerForm = Omit<PlayersRouterInput["edit"], "id">;
 
@@ -16,7 +16,7 @@ type PlayerEditFormProps = {
   onFinished: (player: PlayersRouterOutput["edit"]) => void;
 };
 
-const PlayerEditForm: React.FC<PlayerEditFormProps> = ({
+export const PlayerEditForm: React.FC<PlayerEditFormProps> = ({
   player,
   onFinished,
 }) => {
@@ -48,8 +48,6 @@ const PlayerEditForm: React.FC<PlayerEditFormProps> = ({
     />
   );
 };
-
-export default PlayerEditForm;
 
 type PlayerEditFormViewProps = {
   form: ReturnType<typeof useForm<PlayerForm>>;

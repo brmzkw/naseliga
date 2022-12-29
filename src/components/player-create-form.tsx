@@ -9,11 +9,11 @@ import type {
   PlayersRouterOutput,
 } from "../server/trpc/router/players";
 import { AddButton } from "./buttons";
-import CountrySelect from "./country-select";
+import { CountrySelect } from "./country-select";
 
 export type PlayerFormSchema = PlayersRouterInput["create"];
 
-const PlayerCreateForm: React.FC = () => {
+export const PlayerCreateForm: React.FC = () => {
   const form = useForm<PlayerFormSchema>();
   const utils = trpc.useContext();
 
@@ -32,8 +32,6 @@ const PlayerCreateForm: React.FC = () => {
     />
   );
 };
-
-export default PlayerCreateForm;
 
 type PlayerViewProps = {
   form: ReturnType<typeof useForm<PlayerFormSchema>>;

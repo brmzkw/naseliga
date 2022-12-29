@@ -3,15 +3,15 @@ import React from "react";
 import { useSession } from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
-import PlayerName from "./player-name";
-import LeaderboardUpdateButton from "./leaderboard-update-button";
-import LoadingSpinner from "./loading-spinner";
+import { PlayerName } from "./player-name";
+import { LeaderboardUpdateButton } from "./leaderboard-update-button";
+import { LoadingSpinner } from "./loading-spinner";
 import type { EventsRouterOutput } from "../server/trpc/router/events";
 
 type Event = EventsRouterOutput["list"][number];
 type NullableEvent = Event | null;
 
-const Leaderboard: React.FC = () => {
+export const Leaderboard: React.FC = () => {
   const query = trpc.events.list.useQuery();
 
   const [selectedEvent, setSelectedEvent] = React.useState<NullableEvent>(null);
@@ -100,8 +100,6 @@ const Title: React.FC<TitleProps> = ({ event, isFirst }) => {
   }
   return <strong>Leaderboard on {eventName} </strong>;
 };
-
-export default Leaderboard;
 
 type LeaderboardContentProps = {
   event: NullableEvent;

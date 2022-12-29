@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import type { EventsRouterOutput } from "../server/trpc/router/events";
 import { AddButton } from "./buttons";
 import { trpc } from "../utils/trpc";
-import PlayerSelect from "./player-select";
+import { PlayerSelect } from "./player-select";
 
 type MatchCreateForm = {
   scoreA: string;
@@ -27,7 +27,7 @@ type MatchCreateFormProps = {
   event: EventsRouterOutput["list"][number];
 };
 
-const MatchCreateForm: React.FC<MatchCreateFormProps> = ({ event }) => {
+export const MatchCreateForm: React.FC<MatchCreateFormProps> = ({ event }) => {
   const form = useForm<MatchCreateForm>({
     defaultValues: {
       scoreA: "0",
@@ -59,8 +59,6 @@ const MatchCreateForm: React.FC<MatchCreateFormProps> = ({ event }) => {
     />
   );
 };
-
-export default MatchCreateForm;
 
 type MatchCreateFormViewProps = {
   form: ReturnType<typeof useForm<MatchCreateForm>>;

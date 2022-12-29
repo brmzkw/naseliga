@@ -4,14 +4,14 @@ import Select, { type Props, type GroupBase, createFilter } from "react-select";
 import type { PlayersRouterOutput } from "../server/trpc/router/players";
 
 import { trpc } from "../utils/trpc";
-import PlayerName from "./player-name";
+import { PlayerName } from "./player-name";
 
 type Player = PlayersRouterOutput["list"][number];
 
 /*
  * This component is a wrapper around react-select that fetches the list of players.
  */
-const PlayerSelectInput = React.forwardRef(
+export const PlayerSelectInput = React.forwardRef(
   (
     props: Props<Player, false, GroupBase<Player>>,
     ref: React.ComponentPropsWithRef<
@@ -36,5 +36,3 @@ const PlayerSelectInput = React.forwardRef(
 );
 
 PlayerSelectInput.displayName = "PlayerSelectInput";
-
-export default PlayerSelectInput;

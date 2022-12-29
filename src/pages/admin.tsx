@@ -2,9 +2,9 @@ import React from "react";
 
 import { type NextPage } from "next";
 
-import BaseLayout from "../layouts/base";
-import PlayerCreateForm from "../components/player-create-form";
-import PlayerList from "../components/player-list";
+import { BaseLayout } from "../layouts/base";
+import { PlayerCreateForm } from "../components/player-create-form";
+import { PlayerList } from "../components/player-list";
 
 const AdminPage: NextPage = () => {
   return (

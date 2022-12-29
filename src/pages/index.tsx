@@ -2,10 +2,10 @@ import React from "react";
 
 import { type NextPage } from "next";
 
-import EventList from "../components/event-list";
-import Leaderboard from "../components/leaderboard";
+import { EventList } from "../components/event-list";
+import { Leaderboard } from "../components/leaderboard";
 
-import BaseLayout from "../layouts/base";
+import { BaseLayout } from "../layouts/base";
 
 const HomePage: NextPage = () => {
   return (

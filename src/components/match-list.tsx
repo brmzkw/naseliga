@@ -3,15 +3,15 @@ import React from "react";
 import { useSession } from "next-auth/react";
 
 import type { EventsRouterOutput } from "../server/trpc/router/events";
-import PlayerName from "./player-name";
-import MatchCreateForm from "./match-create-form";
-import MatchRemoveButton from "./match-remove-button";
+import { PlayerName } from "./player-name";
+import { MatchCreateForm } from "./match-create-form";
+import { MatchRemoveButton } from "./match-remove-button";
 
 type MatchListProps = {
   event: EventsRouterOutput["list"][number];
 };
 
-const MatchList: React.FC<MatchListProps> = ({ event }) => {
+export const MatchList: React.FC<MatchListProps> = ({ event }) => {
   const { data: sessionData } = useSession();
   return (
     <div>
@@ -89,5 +89,3 @@ const MatchList: React.FC<MatchListProps> = ({ event }) => {
     </div>
   );
 };
-
-export default MatchList;

@@ -4,12 +4,12 @@ import { trpc } from "../utils/trpc";
 
 import type { PlayersRouterOutput } from "../server/trpc/router/players";
 import { EditButton } from "./buttons";
-import PlayerName from "./player-name";
-import LoadingSpinner from "./loading-spinner";
-import PlayerRemoveButton from "./player-remove-button";
-import PlayerEditForm from "./player-edit-form";
+import { PlayerName } from "./player-name";
+import { LoadingSpinner } from "./loading-spinner";
+import { PlayerRemoveButton } from "./player-remove-button";
+import { PlayerEditForm } from "./player-edit-form";
 
-const PlayerList: React.FC = () => {
+export const PlayerList: React.FC = () => {
   const playersQuery = trpc.players.list.useQuery();
 
   if (!playersQuery.data) {
@@ -23,8 +23,6 @@ const PlayerList: React.FC = () => {
     </div>
   );
 };
-
-export default PlayerList;
 
 type PlayersListRowProps = {
   player: PlayersRouterOutput["list"][number];

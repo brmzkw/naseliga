@@ -2,7 +2,7 @@ type LoadingSpinnerProps = {
   text?: string;
 };
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ text }) => {
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ text }) => {
   return (
     <div className="flex items-center justify-center">
       <svg
@@ -25,5 +25,3 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ text }) => {
     </div>
   );
 };
-
-export default LoadingSpinner;

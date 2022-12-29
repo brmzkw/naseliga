@@ -10,7 +10,9 @@ type EventRemoveButtonProps = {
   event: EventsRouterInput["delete"];
 };
 
-const EventRemoveButton: React.FC<EventRemoveButtonProps> = ({ event }) => {
+export const EventRemoveButton: React.FC<EventRemoveButtonProps> = ({
+  event,
+}) => {
   const utils = trpc.useContext();
 
   const mutation = trpc.events.delete.useMutation({
@@ -30,5 +32,3 @@ const EventRemoveButton: React.FC<EventRemoveButtonProps> = ({ event }) => {
     />
   );
 };
-
-export default EventRemoveButton;

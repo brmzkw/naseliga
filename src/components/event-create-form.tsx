@@ -15,7 +15,7 @@ type NewEventForm = Omit<Omit<EventsRouterInput["create"], "id">, "date"> & {
   date: string;
 };
 
-const EventCreateForm: React.FC = () => {
+export const EventCreateForm: React.FC = () => {
   const utils = trpc.useContext();
 
   const today = new Date();
@@ -46,8 +46,6 @@ const EventCreateForm: React.FC = () => {
     />
   );
 };
-
-export default EventCreateForm;
 
 type EventCreateFormViewProps = {
   isLoading: boolean;

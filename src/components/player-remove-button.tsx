@@ -11,7 +11,9 @@ type PlayerRemoveButtonProps = {
   player: PlayersRouterInput["delete"];
 };
 
-const PlayerRemoveButton: React.FC<PlayerRemoveButtonProps> = ({ player }) => {
+export const PlayerRemoveButton: React.FC<PlayerRemoveButtonProps> = ({
+  player,
+}) => {
   const utils = trpc.useContext();
 
   const mutation = trpc.players.delete.useMutation({
@@ -27,8 +29,6 @@ const PlayerRemoveButton: React.FC<PlayerRemoveButtonProps> = ({ player }) => {
     />
   );
 };
-
-export default PlayerRemoveButton;
 
 type PlayerRemoveButtonViewProps = {
   isLoading: boolean;

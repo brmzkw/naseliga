@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { UpdateButton } from "./buttons";
 import { trpc } from "../utils/trpc";
 
-const LeaderboardUpdateButton: React.FC = () => {
+export const LeaderboardUpdateButton: React.FC = () => {
   const utils = trpc.useContext();
   const mutation = trpc.leaderboard.update.useMutation({
     onSuccess: () => {
@@ -18,8 +18,6 @@ const LeaderboardUpdateButton: React.FC = () => {
     />
   );
 };
-
-export default LeaderboardUpdateButton;
 
 type LeaderboardUpdateButtonViewProps = {
   isLoading: boolean;

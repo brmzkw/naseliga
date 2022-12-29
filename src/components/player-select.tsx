@@ -3,14 +3,14 @@ import { CircleFlag } from "react-circle-flags";
 
 import type { PlayersRouterOutput } from "../server/trpc/router/players";
 
-import PlayerSelectInput from "./player-select-input";
+import { PlayerSelectInput } from "./player-select-input";
 
 type Player = PlayersRouterOutput["list"][number];
 
 /*
  * Display a big flag on top of the player select input.
  */
-const PlayerSelect = React.forwardRef(
+export const PlayerSelect = React.forwardRef(
   (
     props: React.ComponentPropsWithoutRef<typeof PlayerSelectInput>,
     ref: React.ComponentPropsWithRef<typeof PlayerSelectInput>["ref"]
@@ -41,5 +41,3 @@ const PlayerSelect = React.forwardRef(
 );
 
 PlayerSelect.displayName = "PlayerSelect";
-
-export default PlayerSelect;

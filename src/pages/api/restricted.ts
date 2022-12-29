@@ -2,7 +2,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 import { getServerAuthSession } from "../../server/common/get-server-auth-session";
 
-const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
+export const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
 
   if (session) {
@@ -17,5 +17,3 @@ const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 };
-
-export default restricted;

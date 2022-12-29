@@ -4,13 +4,13 @@ import { useSession } from "next-auth/react";
 
 import type { eventsRouter } from "../server/trpc/router/events";
 import { trpc } from "../utils/trpc";
-import LoadingSpinner from "./loading-spinner";
+import { LoadingSpinner } from "./loading-spinner";
 import type { inferRouterOutputs } from "@trpc/server";
-import EventRemoveButton from "./event-remove-button";
-import EventCreateForm from "./event-create-form";
-import MatchList from "./match-list";
+import { EventRemoveButton } from "./event-remove-button";
+import { EventCreateForm } from "./event-create-form";
+import { MatchList } from "./match-list";
 
-const EventList: React.FC = () => {
+export const EventList: React.FC = () => {
   const query = trpc.events.list.useQuery();
   const { data: sessionData } = useSession();
 
@@ -38,8 +38,6 @@ const EventList: React.FC = () => {
     </div>
   );
 };
-
-export default EventList;
 
 type EventProps = {
   defaultOpen: boolean;

@@ -6,7 +6,7 @@ type PlayerNameProps = {
   player: PlayersRouterOutput["list"][number] | null;
 };
 
-const PlayerName: React.FC<PlayerNameProps> = ({ player }) => {
+export const PlayerName: React.FC<PlayerNameProps> = ({ player }) => {
   if (!player) {
     return null;
   }
@@ -21,5 +21,3 @@ const PlayerName: React.FC<PlayerNameProps> = ({ player }) => {
     </div>
   );
 };
-
-export default PlayerName;
